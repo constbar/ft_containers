@@ -3,19 +3,25 @@
 
 namespace my {
 
-	template<typename T>
+	template <typename T>
 	class iter {
 
 		public:
 
 			typedef T* pointer;
-			typedef T& referece;
+			typedef T& reference;
 
 			iter() : ptr_iter(NULL) {
-				std::cout << "ptr null constt" << std::endl; }
+				std::cout << "ptr null const" << std::endl; }
 
 			iter(pointer first) : ptr_iter(first) {
-				std::cout << "ptr constt" << std::endl; }
+				std::cout << "ptr const with arg" << std::endl; }
+
+			iter(const iter &op) : ptr_iter(op.ptr_iter) {
+				std::cout << "copy constt" << std::endl; }
+
+			reference operator*() const {
+				return *this->ptr_iter; }
 
 		private:
 			// T* ptr_iter;
