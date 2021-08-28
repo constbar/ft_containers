@@ -3,45 +3,43 @@
 
 #include <iterator>
 
-
-// diy aka nvm: Nevermind. // idk i dont know
-namespace my {
+namespace diy {
 
 	// template <class Category, class T, class Distance = ptrdiff_t,
 			//   class Pointer = T *, class Reference = T &>
-	template <typename T, typename pointer = T*, typename reference = T&> // next string
-	//  : public std::iterator<std::random_access_iterator_tag, T>
-	class iter
-	{ // rename to ra_iter
-	
-	private:
-		pointer ptr_iter; // rename
+	template <typename T, typename pointer = T*, // vse deault paramets should be at the end // vse ok // NINE!! we could not refer by the ::
+		typename reference = T&> // maybe will be error because v nasledovanii est' opredelennaya posledovatel'nost' v structure
+	//  : public std::iterator<std::random_access_iterator_tag, T> // hotya mi v template oboznachaem, a peredaem v nasledovanii
+	class iter { //ranit
 
-	public:
-		// typedef T *pointer;
-		// typedef T &reference;
+		private:
+			pointer ptr_iter; // rename
 
-		iter() : ptr_iter(NULL) { // speed of exec
-			std::cout << "ptr null const" << std::endl; }
+		public:
+			// typedef T *pointer;
+			// typedef T &reference;
 
-		iter(pointer input) {
-			this->ptr_iter = input;
-			std::cout << "ptr const with arg" << std::endl; }
+			iter() : ptr_iter(NULL) { // speed of exec
+				std::cout << "ptr null const" << std::endl; }
 
-		iter(const iter &other) {
-			this->ptr_iter = other.ptr_iter;
-			std::cout << "copy constr" << std::endl; }
+			iter(pointer input) {
+				this->ptr_iter = input;
+				std::cout << "ptr const with arg" << std::endl; }
 
-		iter &operator=(const iter &other) {
-			if (this == &other) return *this;
-			this->ptr_iter = other.ptr_iter;
-			return *this; }
+			iter(const iter &other) {
+				this->ptr_iter = other.ptr_iter;
+				std::cout << "copy constr" << std::endl; }
 
-		~iter() {} // virtual
+			iter &operator=(const iter &other) {
+				if (this == &other) return *this;
+				this->ptr_iter = other.ptr_iter;
+				return *this; }
 
-		reference operator*() const {
-			std::cout << "ref in work" << std::endl;
-			return *this->ptr_iter; }
+			~iter() {} // virtual
+
+			reference operator*() const {
+				std::cout << "ref in work" << std::endl;
+				return *this->ptr_iter; }
 
 	};
 }

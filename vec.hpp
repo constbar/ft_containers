@@ -20,7 +20,7 @@
 // }
 
 
-namespace my {
+namespace diy {
 	
 	template<typename T> // dont need it all
 	class vector {

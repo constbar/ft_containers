@@ -1,55 +1,78 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include <list>
+
+#include <numeric>
+#include <typeinfo> // typeid
 
 #include "vec.hpp"
 #include "itr.hpp"
 
-template <typename Iterator>
-void FooImpl(Iterator first, Iterator last, std::random_access_iterator_tag)
-{
+// struct iiterator_traits;
+// struct iiterator;
 
-}
-template <typename Iterator>
-void Foo(Iterator first, Iterator last)
-{
-	typedef typename std::iterator_traits<Iterator>::iterator_category category;
-	return FooImpl(first, last, category());
-}
+class man {
+	public:
+		man() {
+			std::cout << "ama man!\n";
+		}
+};
+// : public std::iterator<std::random_access_iterator_tag, T>
+template<typename _Category, typename _Tp, typename _Distance = std::ptrdiff_t,
+           typename _Pointer = _Tp*, typename _Reference = _Tp&>
+    struct iiterator { // its not an iiterator // rename!! // iiterator <int, int> // typeid(ttt).name() testing just int
+      typedef _Category  iterator_category; // 32767 // i								iiterator<int, int>::value_type
+      typedef _Tp        value_type;		// 32765 // i
+      typedef _Distance  difference_type;	// 140729308496224 // l
+      typedef _Pointer   pointer;			// adr // Pi
+      typedef _Reference reference;			// 12 // i
+	  iiterator() {std::cout << "basic type called\n";} // delete
+};
 
+// its a bad idea to implement traits bec of some types require compiler internals
+template<typename iiterator>
+struct iiterator_traits { // what a name!
+      typedef typename iiterator::iterator_category iterator_category; // all works with iiterator_traits<iiterator<int, int>>::value_type lll;
+      typedef typename iiterator::value_type        value_type;
+      typedef typename iiterator::difference_type   difference_type;
+      typedef typename iiterator::pointer           pointer;
+      typedef typename iiterator::reference         reference;
+};
+
+	// std::iterator_traits<int*>::iterator_category p; // from iter to pointer
+	// std::cout << typeid(p).name() << std::endl;
+
+
+	// iiterator_traits<iiterator<int, int> > ::iterator_category ttt;
+	// std::iterator_traits<std::vector<int>::iterator>::iterator_category cati;
+	
+	// #include <limits>
+	// int max1 = std::numeric_limits<int>::max(); // its a trait of this
+	// std::cout << max1 << std::endl;
 int main() {
 
-	// // this is vector 
+	// // iiterator_traits< iiterator<int, int> >::value_type i;
 	std::vector<int> kek;
-	kek.push_back(1);
-	std::vector<int>::iterator it;
-	it = kek.begin();
+	kek.push_back(11);
+	kek.push_back(12);
+	kek.push_back(13);
+	// std::vector<int>::iterator lol = kek.begin();
+	int o = 20;
+	int *pp = &o;
+	std::iterator_traits<int*>::pointer p;
+	std::cout << typeid(p).name() << std::endl;
+	// p = &o;
+	// std::cout << pp;
+	// std::cout << &lol << std::endl;
+	// std::cout << lol.base() << std::endl;
+
+	// std::cout << std::advance(lol, 2);
+	// back
 
 #if 0
-	int i = 77;
-	// std::vector<int> arr;
-	my::iter<int> kek;
-	kek = &i;
-	std::cout << *kek << std::endl;
-
-	// std::<int>::iterator it;
-
-	// int *pint = &i;
-
-	// kek = &i;
-	// p = &i;
-	// *kek = 11;
-	// std::cout << i << std::endl;
-	// std::cout << *kek << std::endl;
 #endif
 
-	// std::vector<int> kek;
-	// kek.push_back(2);
-	// kek.push_back(1);
-	// kek.push_back(3);
-	
-	// std::vector<int>::iterator i1 = kek.begin();
-	// std::vector<int>::iterator i2 = kek.end();
 	return 0;
 }
 
@@ -78,7 +101,7 @@ int main() {
 // 		std::cout << *it << ' ';
 // 	std::cout << '\n';
 
-//   return 0;
+//	return 0;
 // // }
 
 
@@ -103,3 +126,5 @@ int main() {
 // 	// std::cout << typeid('1').name() << std::endl; //prints "class Derived"
 // 	return 0;
 // }
+
+

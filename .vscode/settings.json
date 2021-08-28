@@ -13,6 +13,24 @@
 		"string_view": "cpp",
 		"initializer_list": "cpp",
 		"type_traits": "cpp",
-		"utility": "cpp"
+		"utility": "cpp",
+		"list": "cpp",
+		"*.tcc": "cpp",
+		"algorithm": "cpp",
+		"memory": "cpp",
+		"streambuf": "cpp",
+		"bit": "cpp",
+		"cmath": "cpp",
+		"map": "cpp",
+		"functional": "cpp",
+		"system_error": "cpp",
+		"tuple": "cpp",
+		"numeric": "cpp",
+		"fstream": "cpp",
+		"istream": "cpp",
+		"limits": "cpp",
+		"new": "cpp",
+		"ostream": "cpp",
+		"random": "cpp"
 	}
 }
