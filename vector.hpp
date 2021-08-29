@@ -1,28 +1,15 @@
-#ifndef VEC_HPP
-#define VEC_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 // template <class T, class Allocator = std::allocator<T>>
-// class vector;
-
-/* 
-	1. realise all methods
-*/
+// how to make const iter
 
 #include "ranit.hpp"
 #include <iostream>
 
-
-// namespace ft {
-// 	template <class T>
-// 	class random_access_iterator : 
-// 	public std::iterator<ft::random_access_iterator_tag, T> {
-// };
-// }
-
-
 namespace diy {
 	
-	template<typename T> // dont need it all
+	template<typename T>
 	class vector {
 
 		private:
@@ -31,7 +18,7 @@ namespace diy {
 			size_t	cp;
 
 		public:
-			
+			typedef typename diy::ranit<T> iterator;
 			vector() { // this
 
 				sz = 0;

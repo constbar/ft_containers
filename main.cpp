@@ -6,7 +6,7 @@
 #include <numeric> // chech it
 #include <typeinfo> // typeid
 
-#include "vec.hpp"
+#include "vector.hpp"
 #include "ranit.hpp"
 #include "iter.hpp"
 
@@ -31,10 +31,10 @@ int main()
 	ii++;
 	// std::cout << ii.operator->() << std::endl;
 #endif
-	std::vector<int> vec; vec.push_back(20); vec.push_back(20);
-	diy::ranit<std::vector<int> > kek;
-	//  = vec.begin();
-	// kek = vec.begin();
+
+	diy::vector<int>::iterator kek;
+
+
 	return 0;
 }
 
