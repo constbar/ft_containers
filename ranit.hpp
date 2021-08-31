@@ -17,12 +17,13 @@
 	// 	typedef R reference;
 
 
-
+// check all type names here!!! bec orig_iterator should call the same
 namespace diy {
-	template <typename T, typename C = std::random_access_iterator_tag,
+	// template <typename T>
+	template <typename T, typename C = std::random_access_iterator_tag, 
 		typename D = std::ptrdiff_t, typename P = T*, typename R = T&>
 	
-	class ranit {
+	class ranit { // : std::iterator<std::random_access_iterator_tag, T> {
 		public:
 			typedef C	category;
 			typedef T	val_type;
@@ -30,23 +31,35 @@ namespace diy {
 			typedef P	pointer;
 			typedef R	reference;
 
+			//ne nado  typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category ita;
+			// typedef T		val_type;
+			// typedef T&		reference;
+			// typedef T*		pointer;
+			// typedef typename std::ptrdiff_t						dif_type;
+			// typedef typename std::random_access_iterator_tag	category;
+
+
 		private:
-			pointer ptr_iter;
+			// typedef ranit<T> it; // i can store it here // need i it at all??
+			pointer		ptr_iter;
 
 		public: // maybe make it protected // make it in one stting later
 			ranit() : ptr_iter(NULL) {
-				std::cout << "simple iter\n"; // delete
+				// std::cout << "simple iter\n"; // delete
 			}
 			ranit(pointer input) { this->ptr_iter = input; }
-			ranit(const ranit &other) { this->ptr_iter = other.ptr_iter; }
+			ranit(const ranit<T> &other) { this->ptr_iter = other.ptr_iter; } // was added <T>
 
+			// it &operator=(const it &other) { // 2 remakes of it
 			ranit &operator=(const ranit &other) {
+				// should return ranit<T>
 				if (this == &other) return *this;
 				this->ptr_iter = other.ptr_iter;
 				return *this; }
 
 			~ranit() {}
-
+			
+			// maybe should returm ranit<T>
 			reference operator*() const { return *this->ptr_iter; }
 			pointer operator->() const { return this->ptr_iter; }
 			ranit &operator++() { ptr_iter++; return *this; }
@@ -79,7 +92,7 @@ namespace diy {
 	};
 }
 
-
+// remake because of original chenged !!!!!!!!!!!!!!!!!!!!!
 namespace diy {
 	template <typename T, typename C = std::random_access_iterator_tag,
 		typename D = std::ptrdiff_t, typename P = T*, typename R = T&>
@@ -138,13 +151,3 @@ namespace diy {
 }
 
 #endif
-
-
-// template <typename _Iterator>
-// class reverse_iterator
-	// : public iterator<typename iterator_traits<_Iterator>::iterator_category,
-	// 				  typename iterator_traits<_Iterator>::value_type,
-	// 				  typename iterator_traits<_Iterator>::difference_type,
-	// 				  typename iterator_traits<_Iterator>::pointer,
-					//   typename iterator_traits<_Iterator>::reference>
-					//

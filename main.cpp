@@ -14,28 +14,19 @@
 #include <iterator> // std::iterator_traits
 #include <typeinfo> // typeid
 
-int main()
-{
-#if 0
-	diy::ranit<int>::pointer i;
-	std::cout << typeid(i).name() << std::endl;
-	int k = 20;
-	int q = 40;
-	diy::ranit<int> ii(&k);
-	ii = &k;
-	std::cout << ii.operator*() << std::endl;
-	std::cout << ii.operator->() << std::endl;
-	ii.operator++();
-	std::cout << ii.operator*() << std::endl;
-	++ii;
-	ii++;
-	// std::cout << ii.operator->() << std::endl;
-#endif
+int main() {
 
-	diy::vector<int>::iterator kek;
+	// std::vector<int>::size_type al;
+	// diy::vector<int>::size_type it;
+	// std::cout << al << std::endl;
 
+	diy::vector<int> vec(20);
+	// diy::vector<int>::iterator it;
+	
+	// it = vec.begin();
+	// std::cout << *it << std::endl;
+	// it++;
+	// std::cout << *it << std::endl;
 
 	return 0;
 }
-
-
