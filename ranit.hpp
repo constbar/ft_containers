@@ -30,7 +30,13 @@ namespace diy {
 			typedef D	dif_type;
 			typedef P	pointer;
 			typedef R	reference;
+			
 
+			/* it is about const and non const iterators
+ 			// pde -back // t_containers / srcs / Iterators / RandomAccessIterator.hpp
+			typedef random ac iter<T, T *, T &> it;
+			typedef random ac iter<T, const T *, const T &> const_it;
+ */
 			//ne nado  typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category ita;
 			// typedef T		val_type;
 			// typedef T&		reference;

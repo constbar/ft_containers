@@ -7,6 +7,35 @@
 // 1. why vector is always explisit
 
 
+/**
+    *
+    * - Coplien form:
+    * operator=:            Assign vector
+    *	copy 
+	* 
+    * - Iterators:
+    * rbegin:               Return reverse iterator to reverse beginning
+    * rend:                 Return reverse iterator to reverse end
+    * - Element access:
+    * operator[]:           Access element
+    * at:                   Access element
+    * front:                Access first element
+    * back:                 Access last element
+    *
+    * - Modifiers:
+    * assign:               Assign vector content
+    * insert:               Insert elements
+    * erase:                Erase elements
+    * swap:                 Swap content
+    * clear:                Clear content
+    *
+    * - Non-member function overloads:
+    * relational operators: Relational operators for vector
+    * swap:                 Exchange contents of two vectors
+    * ------------------------------------------------------------- *
+    */
+
+
 #include "ranit.hpp"
 #include <iostream>
 
@@ -17,14 +46,14 @@ namespace diy {
 		public:
 
 		public:
-			typedef T					value_type;
+			// typedef T					value_type;
 			typedef T*					pointer;
 			typedef T&					reference;
  			typedef std::ptrdiff_t		difference_type;
-			typedef size_t				size_type;
+			// typedef size_t				size_type; // i dont need it 
 
-			typedef typename diy::ranit<value_type>		iterator;
-			typedef typename std::allocator<value_type>	allocator_type;
+			typedef typename diy::ranit<T>		iterator;
+			typedef typename std::allocator<T>	allocator_type;
 
 			// typedef const value_type &const_reference;
 			// typedef const value_type *const_pointer;
@@ -35,106 +64,108 @@ namespace diy {
 
 		// private:
 		public: // make it private
-			pointer			ptr;
-			size_type		size;
-			size_type		capacity;
-			allocator_type 	allocator;
+			pointer			v_ptr;
+			size_t			v_size;
+			size_t			v_capacity;
+			allocator_type 	v_allocator;
 
 		public:
+			// invalid func
  			vector(const allocator_type &alloc = allocator_type() ) {
-				this->ptr = NULL; this->size = 0;
-				this->capacity = 0;
+				this->v_ptr = NULL;
+				this->v_size = 0;
+				this->v_capacity = 0;
 
-				this->ptr = allocator.allocate(1); // del .allocate(0)
-				this->allocator.construct(ptr, 12); // del
+				this->v_ptr = v_allocator.allocate(1); // del .allocate(0)
+				this->v_allocator.construct(v_ptr, 12); // del
 			}
 
-			vector(size_t num, const T& val = T(),
-				const allocator_type& alloc = allocator_type()) {
-				this->ptr = NULL;
-				this->size = num;
-				this->capacity = num;
-				this->allocator = alloc;
+			vector(const size_t input_num, const T &intput_val = T(),
+				const allocator_type &alloc = allocator_type()) {
+				
+				this->v_ptr = NULL;
+				this->v_size = input_num;
+				this->v_capacity = input_num;
 
+				this->v_allocator = alloc;
+				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
 
-				// this->ptr = allocator.allocate(capacity);	
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
+
+			// idk what is it
+			// here Range constructor, creates a vector with a size equal
 
 			~vector() {
-				// if (this->allocator)
-					// this->allocator.deallocate(1);
-					this->allocator.destroy(ptr);
-					this->allocator.deallocate(this->ptr, 1);
+
+				for (size_t i = 0; i > this->v_size; i++) // was till capacity
+					this->v_allocator.destroy(&this->v_ptr[i]);
+				this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
 			}
 
-			// iterator begin() { return iterator(_vector); }
-			iterator begin() {
-				return iterator(ptr); // it was just return ar
+			iterator begin() { return iterator(this->v_ptr); }
+			// const begin
+			iterator end() { return iterator(this->v_ptr + this->v_size); }
+			// const end
+
+			// make it private // i didnt test it yet
+			void realloc(const size_t new_capacity) { // reserve? // added const
+				
+				pointer tmp = this->v_allocator.allocate(new_capacity); // can add here try catch 
+				
+				size_t old_size = this->v_size; //
+				if (new_capacity < this->v_size) //
+					this->v_size = new_capacity; //
+
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(&tmp[i], this->v_ptr[i]);
+
+				// this->~vector();
+				
+				for (size_t i = 0; i < old_size; i++) //
+					this->v_allocator.destroy(&this->v_ptr[i]); //
+				this->v_allocator.deallocate(this->v_ptr, this->v_capacity); //
+
+				this->v_capacity = new_capacity;
+				this->v_ptr = tmp;
 			}
 
-		// 	vector(size_t n, const value_type &val = value_type()) {
-		// 		sz = 0;
-		// 		cp = 0;
-		// 		ar = NULL;
-		// 	}
+			void reserve(const size_t input_num) { // added const
 
-		// 	void reserve(size_t n) {
+				if (input_num <= this->v_capacity)
+					return;
+				size_t m = std::max(input_num, this->v_capacity * 2);
+				realloc(m);
+			}
+			
+			void push_back(const T &input_val) {
+				// maybe size + 1 > capacity or here maybe reserve instead realloc
+				if (this->v_size == this->v_capacity) {
+					if (!this->v_size)
+						realloc(1);
+					else
+						realloc(this->v_capacity * 2);
+				}
+				this->v_allocator.construct(&this->v_ptr[this->v_size], input_val);
+				this->v_size++;
+			}
 
-		// 		if (n < this->cp)
-		// 			return;
+			size_t size() const { return this->v_size; }
+			size_t capacity() const { return this->v_capacity; }
+			bool empty() const { return !this->v_size; }
+			size_t max_size() const { return this->v_allocator.max_size(); }
+			
+			void pop_back() {
+				if (this->v_size) {
+					this->v_allocator.destroy(&this->v_ptr[this->v_size - 1]);
+					this->v_size--;
+				}
+			}
 
-		// 		T* newarr = new T[n];
-		// 		for (size_t i = 0; i < this->sz; i++)
-		// 			newarr[i] = this->ar[i];
-
-		// 		delete [] this->ar;
-		// 		this->ar = newarr;
-		// 		this->cp = n;
-		// 	}
-
-		// 	void resize(size_t n, const T &value = T()) {
-
-		// 		if (n > this->cp)
-		// 			reserve(n);
-				
-		// 		for (size_t i = this->sz; i < n; i++)
-		// 			this->ar[i] = value;
-
-		// 		if (n < this->sz)
-		// 			this->sz = n;
-		// 	};
-
-		// 	void push_back(const T &value) {
-				
-		// 		if (this->cp == this->sz)
-		// 			reserve(2 * sz);
-				
-		// 		this->ar[sz] = value;
-		// 		sz++;
-		// 	}
-
-		// 	void pop_back() {
-
-		// 		this->sz--;
-		// 	}
-
-		// 	size_t size() const {
-
-		// 		return this->sz;
-		// 	}
-
-		// 	size_t capacity() {
-
-		// 		return this->cp;
-		// 	}
-
-
-			// my::iter ret() {
-
-		// 	// 	return my::iter;
-		// 	// }
-
-		// 	// virtual	~Base();
+			void resize(const size_t num, T input_val = T()) { // added const
+				// MAKE IT
+			}
 	};
 
 }

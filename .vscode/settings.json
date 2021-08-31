@@ -14,6 +14,18 @@
 		"algorithm": "cpp",
 		"memory": "cpp",
 		"initializer_list": "cpp",
-		"numeric": "cpp"
+		"numeric": "cpp",
+		"new": "cpp",
+		"atomic": "cpp",
+		"bit": "cpp",
+		"memory_resource": "cpp",
+		"random": "cpp",
+		"fstream": "cpp",
+		"sstream": "cpp",
+		"stdexcept": "cpp",
+		"tuple": "cpp",
+		"utility": "cpp",
+		"functional": "cpp",
+		"iosfwd": "cpp"
 	}
 }
