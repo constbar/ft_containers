@@ -5,36 +5,8 @@
 // how to make const iter
 // can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
-
-
-/**
-    *
-    * - Coplien form:
-    * operator=:            Assign vector
-    *	copy 
-	* 
-    * - Iterators:
-    * rbegin:               Return reverse iterator to reverse beginning
-    * rend:                 Return reverse iterator to reverse end
-    * - Element access:
-    * operator[]:           Access element
-    * at:                   Access element
-    * front:                Access first element
-    * back:                 Access last element
-    *
-    * - Modifiers:
-    * assign:               Assign vector content
-    * insert:               Insert elements
-    * erase:                Erase elements
-    * swap:                 Swap content
-    * clear:                Clear content
-    *
-    * - Non-member function overloads:
-    * relational operators: Relational operators for vector
-    * swap:                 Exchange contents of two vectors
-    * ------------------------------------------------------------- *
-    */
-
+// 2. sprosit' farida pro try and catch
+// 3. try and catchi before allocs
 
 #include "ranit.hpp"
 #include <iostream>
@@ -99,7 +71,7 @@ namespace diy {
 
 			~vector() {
 
-				for (size_t i = 0; i > this->v_size; i++) // was till capacity
+				for (size_t i = 0; i > this->v_size; i++)
 					this->v_allocator.destroy(&this->v_ptr[i]);
 				this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
 			}
@@ -110,7 +82,7 @@ namespace diy {
 			// const end
 
 			// make it private // i didnt test it yet
-			void realloc(const size_t new_capacity) { // reserve? // added const
+			void realloc(const size_t new_capacity) {
 				
 				pointer tmp = this->v_allocator.allocate(new_capacity); // can add here try catch 
 				
@@ -131,7 +103,7 @@ namespace diy {
 				this->v_ptr = tmp;
 			}
 
-			void reserve(const size_t input_num) { // added const
+			void reserve(size_t input_num) {
 
 				if (input_num <= this->v_capacity)
 					return;
@@ -163,11 +135,96 @@ namespace diy {
 				}
 			}
 
-			void resize(const size_t num, T input_val = T()) { // added const
-				// MAKE IT
+			void resize(size_t input_num, T input_val = T()) {
+				
+				while (this->v_size > input_num)
+					pop_back();
+				if (input_num > this->v_capacity)
+					reserve(input_num);
+				while (input_num > this->v_size)
+					push_back(input_val);
 			}
-	};
 
+			void clear() {
+				while(this->v_size)
+					pop_back();
+			}
+			
+			void swap(vector &other) {
+
+				diy::swap(this->v_ptr, other.v_ptr);
+				diy::swap(this->v_size, other.v_size);
+				diy::swap(this->v_capacity, other.v_capacity);
+				diy::swap(this->v_allocator, other.v_allocator);
+			}
+
+			reference operator[] (size_t index) { return this->v_ptr[index]; }
+			// add const reference with const
+			reference at(size_t index) {
+				if (index >= this->v_size)
+					throw std::out_of_range("out of vector");
+				return *(this->v_ptr + index);
+			}
+			// add const reference
+
+			reference front() {
+				return this->v_ptr[0];
+			}
+			// const front
+
+			reference back() {
+				return this->v_ptr[this->v_size - 1];
+			}
+
+			// const back
+
+			vector &operator= (const vector &other) {
+				
+				if (this == &other)
+					return *this;
+				this->~vector();
+				
+				// is it really throws exeption??
+				try { this->v_allocator.allocate(other.v_capacity); }
+				catch(std::exception &e) {throw std::length_error("no alloc"); }
+
+				this->v_size = other.v_size;
+				this->v_capacity = other.v_capacity;
+				this->v_allo/cator = other.v_allocator;
+				// for (size_t i = 0; i < this->v_size; i++)
+				// 	this->v_allocator.construct();
+				
+				return *this;
+				// alloc
+
+
+			}
+			// void erase() {}
+			// void insert
+	
+	
+	
+	};
 }
 
 #endif
+
+/**
+    *
+    * - Coplien form:
+    * operator=:            Assign vector
+    *	copy 
+	* 
+    * - Iterators:
+    * rbegin:               Return reverse iterator to reverse beginning
+    * rend:                 Return reverse iterator to reverse end
+    *
+    * - Modifiers:
+    * assign:               Assign vector content
+    * insert:               Insert elements
+    * erase:                Erase elements
+    *
+    * - Non-member function overloads:
+    * relational operators: Relational operators for vector
+    * ------------------------------------------------------------- *
+    */
