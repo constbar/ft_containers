@@ -7,6 +7,7 @@
 // 1. why vector is always explisit
 // 2. sprosit' farida pro try and catch
 // 3. try and catchi before allocs
+// 4. swap can live here
 
 #include "ranit.hpp"
 #include <iostream>
@@ -43,13 +44,12 @@ namespace diy {
 
 		public:
 			// invalid func
- 			vector(const allocator_type &alloc = allocator_type() ) {
+ 			vector(const allocator_type &alloc = allocator_type()) {
+
 				this->v_ptr = NULL;
 				this->v_size = 0;
 				this->v_capacity = 0;
-
-				this->v_ptr = v_allocator.allocate(1); // del .allocate(0)
-				this->v_allocator.construct(v_ptr, 12); // del
+				this->v_allocator = alloc;
 			}
 
 			vector(const size_t input_num, const T &intput_val = T(),
@@ -67,13 +67,14 @@ namespace diy {
 			}
 
 			// idk what is it
-			// here Range constructor, creates a vector with a size equal
+			// here Range construcor, creates a vector with a size equal
 
 			~vector() {
 
-				for (size_t i = 0; i > this->v_size; i++)
+				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.destroy(&this->v_ptr[i]);
 				this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
+				this->v_ptr = NULL;
 			}
 
 			iterator begin() { return iterator(this->v_ptr); }
@@ -93,7 +94,7 @@ namespace diy {
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&tmp[i], this->v_ptr[i]);
 
-				// this->~vector();
+				// this->~vector(); // it was here but i dont belive in ~
 				
 				for (size_t i = 0; i < old_size; i++) //
 					this->v_allocator.destroy(&this->v_ptr[i]); //
@@ -175,46 +176,54 @@ namespace diy {
 			reference back() {
 				return this->v_ptr[this->v_size - 1];
 			}
-
 			// const back
 
-			vector &operator= (const vector &other) {
+			vector &operator=(const vector &other) {
 				
 				if (this == &other)
 					return *this;
-				this->~vector();
-				
-				// is it really throws exeption??
-				try { this->v_allocator.allocate(other.v_capacity); }
-				catch(std::exception &e) {throw std::length_error("no alloc"); }
 
+				this->~vector();
+
+				// eto uslovie nichego ne vikinet
+				try { this->v_ptr = this->v_allocator.allocate(other.v_capacity); }
+				catch (std::exception &e) { throw std::length_error("no alloc"); }
+				
 				this->v_size = other.v_size;
 				this->v_capacity = other.v_capacity;
-				this->v_allo/cator = other.v_allocator;
-				// for (size_t i = 0; i < this->v_size; i++)
-				// 	this->v_allocator.construct();
+				
+				for (size_t i = 0; i < this->v_size; ++i)
+					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
 				
 				return *this;
-				// alloc
-
-
 			}
-			// void erase() {}
-			// void insert
-	
-	
-	
+
+			vector (const vector &other) {
+				
+				this->v_ptr = NULL;
+				this->v_size = other.v_size;
+				this->v_capacity = other.v_capacity;
+				this->v_allocator = other.v_allocator;
+
+				// need i this tryes?
+				try { this->v_ptr = this->v_allocator.allocate(this->v_capacity); }
+				catch(const std::exception &e) // make it cleaner
+				{
+					throw std::length_error("no alloc");
+					std::cerr << e.what() << '\n'; // to del
+				}
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
+			}
+
+			// iterator erase(const_iterator __position) {}
+			// iterator erase const_iterator __first, const_iterator __last
 	};
 }
 
 #endif
 
 /**
-    *
-    * - Coplien form:
-    * operator=:            Assign vector
-    *	copy 
-	* 
     * - Iterators:
     * rbegin:               Return reverse iterator to reverse beginning
     * rend:                 Return reverse iterator to reverse end
@@ -226,5 +235,4 @@ namespace diy {
     *
     * - Non-member function overloads:
     * relational operators: Relational operators for vector
-    * ------------------------------------------------------------- *
-    */
+*/

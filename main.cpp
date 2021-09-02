@@ -12,7 +12,9 @@
 
 
 int main() {
-	diy::vector<int> lol; // try other type
+
+
+#if 0
 	diy::vector<int> vec;
 	diy::vector<int>::iterator it = vec.begin();
 	diy::vector<int>::iterator en = vec.end();
@@ -20,21 +22,13 @@ int main() {
 	vec.push_back(10);
 	vec.push_back(11);
 	vec.push_back(12);
-	// vec.resize(23);
-	vec.swap(lol);
-	std::cout << lol.back()<< std::endl;
-	// std::cout << lol.at(1) << std::endl;
-	// std::cout << lol.size() << std::endl;
-	// std::cout << lol.capacity() << std::endl;
+	vec.push_back(13);
 
-	// std::vector<int> orig;
-	// orig.push_back(111);
-	// orig.resize(5);
-	// std::cout << orig.size() << std::endl;
-	// std::cout << orig.capacity() << std::endl;
-	// // std::cout << orig[4] << std::endl;
+	diy::vector<int> lol(vec); // copy
+	std::cout << &vec[0] <<	"	" << vec[0] << std::endl;
+	std::cout << &lol[0] <<	"	" << lol[0] << std::endl;
 
-#if 0
+// #if 0
 	std::cout << "std::vector \n";
 	std::vector<int> kek(5);
 	// kek.valu
@@ -43,6 +37,17 @@ int main() {
 	std::cout << kek.size() << std::endl;
 	std::cout << kek.capacity() << std::endl;
 #endif
+	std::vector<int> orig;
+	std::vector<int>::iterator p = orig.begin();
+	orig.push_back(12);
+	orig.push_back(13);
+	// orig.swap();
+	orig.erase(p);
 
 	return 0;
 }
+
+
+// test iterator and existed func to them
+// test vector and existed func to them
+// test vector::iterators and existed func to them

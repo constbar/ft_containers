@@ -9,7 +9,6 @@
 //  : public std::iterator<std::random_access_iterator_tag, T, /* DIST i can add here void void void */>
 // 3. need i base func?
 
-
 	// typedef C iterator_category;
 	// 	typedef T value_type;
 	// 	typedef D difference_type;
@@ -155,6 +154,15 @@ namespace diy {
 			reference operator[](dif_type index) const { return this->ptr_iter[index]; }
 	};
 }
+
+
+
+
+
+
+
+
+
 
 // this for swap
 namespace diy
