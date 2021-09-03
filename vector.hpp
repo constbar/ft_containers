@@ -19,19 +19,18 @@ namespace diy {
 		public:
 
 		public:
-			// typedef T					value_type;
-			typedef T*					pointer;
-			typedef T&					reference;
- 			typedef std::ptrdiff_t		difference_type;
-			// typedef size_t				size_type; // i dont need it 
+			typedef T*				pointer;
+			typedef T&				reference;
+ 			typedef std::ptrdiff_t	difference_type;
 
-			typedef typename diy::ranit<T>		iterator;
+			typedef typename diy::ranit<T, pointer, reference>	iterator;
+			// typedef typename diy::ranit<T, T*, T&>	const_iterator;
+			typedef typename diy::ranit<T, const T*, const T&>	const_iterator;
+
 			typedef typename std::allocator<T>	allocator_type;
 
 			// typedef const value_type &const_reference;
 			// typedef const value_type *const_pointer;
-			// typedef RandomAccessIterator<T, T *, T &> iterator;
-			// typedef RandomAccessIterator<T, const T *, const T &> const_iterator;
 			// typedef ReverseRAI<iterator> reverse_iterator;
 			// typedef ReverseRAI<const_iterator> const_reverse_iterator;
 
@@ -77,8 +76,11 @@ namespace diy {
 				this->v_ptr = NULL;
 			}
 
+			/// end of copliens form
+
+			const_iterator begin() const { return const_iterator(this->v_ptr); }
 			iterator begin() { return iterator(this->v_ptr); }
-			// const begin
+
 			iterator end() { return iterator(this->v_ptr + this->v_size); }
 			// const end
 
