@@ -8,6 +8,7 @@
 // 2. sprosit' farida pro try and catch
 // 3. try and catchi before allocs
 // 4. swap can live here
+// 5. expicit for what
 
 #include "ranit.hpp"
 #include <iostream>
@@ -21,20 +22,16 @@ namespace diy {
 		public:
 			typedef T*				pointer;
 			typedef T&				reference;
+			typedef const T*		const_pointer;
+			typedef const T&		const_reference;
+
  			typedef std::ptrdiff_t	difference_type;
 
+			typedef typename std::allocator<T>					allocator_type;
 			typedef typename diy::ranit<T, pointer, reference>	iterator;
-			// typedef typename diy::ranit<T, T*, T&>	const_iterator;
 			typedef typename diy::ranit<T, const T*, const T&>	const_iterator;
+			// add reverse const and non-c
 
-			typedef typename std::allocator<T>	allocator_type;
-
-			// typedef const value_type &const_reference;
-			// typedef const value_type *const_pointer;
-			// typedef ReverseRAI<iterator> reverse_iterator;
-			// typedef ReverseRAI<const_iterator> const_reverse_iterator;
-
-		// private:
 		public: // make it private
 			pointer			v_ptr;
 			size_t			v_size;
@@ -78,13 +75,18 @@ namespace diy {
 
 			/// end of copliens form
 
-			const_iterator begin() const { return const_iterator(this->v_ptr); }
-			iterator begin() { return iterator(this->v_ptr); }
+			iterator begin() { 
+				std::cout << "usual begin?\n";
+				return iterator(this->v_ptr); }
+
+			const_iterator begin() const { // unused
+				std::cout << "const begin\n";
+				return const_iterator(this->v_ptr); }
 
 			iterator end() { return iterator(this->v_ptr + this->v_size); }
-			// const end
+			const_iterator end() const { return const_iterator(this->v_ptr + this->v_size); }
 
-			// make it private // i didnt test it yet
+			// make it private //
 			void realloc(const size_t new_capacity) {
 				
 				pointer tmp = this->v_allocator.allocate(new_capacity); // can add here try catch 
@@ -154,31 +156,29 @@ namespace diy {
 			}
 			
 			void swap(vector &other) {
-
 				diy::swap(this->v_ptr, other.v_ptr);
 				diy::swap(this->v_size, other.v_size);
 				diy::swap(this->v_capacity, other.v_capacity);
-				diy::swap(this->v_allocator, other.v_allocator);
-			}
+				diy::swap(this->v_allocator, other.v_allocator); }
 
 			reference operator[] (size_t index) { return this->v_ptr[index]; }
-			// add const reference with const
+			const_reference operator[] (size_t index) const { return this->v_ptr[index]; }
+
 			reference at(size_t index) {
 				if (index >= this->v_size)
 					throw std::out_of_range("out of vector");
-				return *(this->v_ptr + index);
-			}
-			// add const reference
+				return *(this->v_ptr + index); }
 
-			reference front() {
-				return this->v_ptr[0];
-			}
-			// const front
+			const_reference at(size_t index) const {
+				if (index >= this->v_size)
+					throw std::out_of_range("out of vector");
+				return *(this->v_ptr + index); }
 
-			reference back() {
-				return this->v_ptr[this->v_size - 1];
-			}
-			// const back
+			reference front() { return this->v_ptr[0]; }
+			const_reference front() const { return this->v_ptr[0]; }
+
+			reference back() { return this->v_ptr[this->v_size - 1]; }
+			const_reference back() const { return this->v_ptr[this->v_size - 1]; }
 
 			vector &operator=(const vector &other) {
 				
@@ -217,6 +217,12 @@ namespace diy {
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
 			}
+
+			void assign(size_t input_num, const T &input_val) {
+				clear();
+				while(input_num) {
+					push_back(input_val);
+					input_num--; }}
 
 			// iterator erase(const_iterator __position) {}
 			// iterator erase const_iterator __first, const_iterator __last

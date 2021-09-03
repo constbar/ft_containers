@@ -9,6 +9,7 @@
 //  : public std::iterator<std::random_access_iterator_tag, T, /* DIST i can add here void void void */>
 // 3. need i base func?
 // 4. why destructor virtual?
+// 5. far will you test just iterators
 
 	// typedef C iterator_category;
 	// 	typedef T value_type;
@@ -16,95 +17,69 @@
 	// 	typedef P pointer;
 	// 	typedef R reference;
 
-
-// check all type names here!!! bec orig_iterator should call the same
 namespace diy {
-	// template <typename T, typename C = std::random_access_iterator_tag, 
-	// 	typename D = std::ptrdiff_t, typename P = T*, typename R = T&>
 	template <typename T, typename Pointer, typename Reference,
 		typename Category = std::random_access_iterator_tag > 
-	class ranit { // : std::iterator<std::random_access_iterator_tag, T> {
+	class ranit {
 		public:
 
-			// typedef C	category;
-			// typedef T	val_type;
-			// typedef D	dif_type;
-			// typedef P	pointer;
-			// typedef R	reference;
-
-
-			//ne nado  typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category ita;
-			// typedef T		val_type;
-			// typedef T&		reference;
-			// typedef T*		pointer;
-			// typedef typename std::ptrdiff_t						dif_type;
-			// typedef typename std::random_access_iterator_tag	category;
-
-			typedef Pointer pointer; /// it will be
-			typedef Reference reference;
+			typedef Pointer			pointer;
+			typedef Reference		reference;
 			typedef typename std::ptrdiff_t						dif_type;
 			typedef typename std::random_access_iterator_tag	category;
 
-			typedef ranit<T, Pointer, Reference>	it; // rename this typers // like common iter
+			typedef ranit<T, Pointer, Reference>	it;
 			typedef ranit<T, T*, T&>				iterator;
 			typedef ranit<T, const T*, const T&>	const_iterator;
 
-		// private:
 		public: // make priv
 			pointer	ptr;
 
-		public: // maybe make it protected
+		public: // maybe make it protected for just iters?
 			ranit() : ptr(NULL) {}
 			ranit(T* input) { this->ptr = input; }
 			ranit(const iterator &other) { this->ptr = other.ptr; }
 				// this->ptr = const_cast<pointer>(other.ptr);
 
+			// could be it -- iterator&
 			// ranit &operator=(const ranit &other) {
-			// 	if (this == &other)
-			// 		return *this;
-			// 	this->ptr = other.ptr; // bilo
-			// 	// this->ptr = const_cast<pointer>(other.ptr);
-			// 	// vozmozhno this-ptr ne good type
-			// 	// return other->ptr;
-			// 	return *this;
-			// }
-
-			//
-			it &operator=(const it& other) { // not good!
+			it &operator=(const it &other) {
+				if (this == &other)
+					return *this;
 				this->ptr = other.ptr;
 				return *this;
 			}
 			
-			virtual ~ranit() {} // virtual
+			virtual ~ranit() {} // why virtual?
 			
 			reference operator*() const { return *this->ptr; }
 			pointer operator->() const { return this->ptr; }
 			
 			it &operator++() { ptr++; return *this; }
-			iterator &operator--() { ptr--; return *this; }
+			it &operator--() { ptr--; return *this; }
 
 			it operator++(int) {
 				it tmp_it(*this);
 				++(*this);
 				return tmp_it; }
 
-			iterator operator--(int) {
-				iterator tmp_it(*this);
+			it operator--(int) {
+				it tmp_it(*this);
 				--(*this);
 				return tmp_it; }
 
-			bool operator>(const iterator &other) const { return this->ptr > other.ptr; }
-			bool operator<(const iterator &other) const { return this->ptr < other.ptr; }
-			bool operator>=(const iterator &other) const { return this->ptr >= other.ptr; }
-			bool operator<=(const iterator &other) const { return this->ptr <= other.ptr; }
-			bool operator==(const iterator &other) const { return this->ptr == other.ptr; }
-			bool operator!=(const iterator &other) const { return this->ptr != other.ptr; }
+			bool operator>(const it &other) const { return this->ptr > other.ptr; }
+			bool operator<(const it &other) const { return this->ptr < other.ptr; }
+			bool operator>=(const it &other) const { return this->ptr >= other.ptr; }
+			bool operator<=(const it &other) const { return this->ptr <= other.ptr; }
+			bool operator==(const it &other) const { return this->ptr == other.ptr; }
+			bool operator!=(const it &other) const { return this->ptr != other.ptr; }
 
 			//maybe incorrect
-			iterator operator+(dif_type shift) const { return iterator(this->ptr + shift); }
-			iterator operator-(dif_type shift) const { return iterator(this->ptr - shift); }
-			iterator &operator+=(dif_type shift) const { this->ptr += shift; return *this; }
-			iterator &operator-=(dif_type shift) const { this->ptr -= shift; return *this; }
+			it operator+(dif_type shift) const { return it(this->ptr + shift); }
+			it operator-(dif_type shift) const { return it(this->ptr - shift); }
+			it &operator+=(dif_type shift) const { this->ptr += shift; return *this; }
+			it &operator-=(dif_type shift) const { this->ptr -= shift; return *this; }
 			T& operator[](dif_type index) const { return this->ptr[index]; } //
 
 			dif_type operator-(ranit other) const { return this->ptr - other.ptr; }
