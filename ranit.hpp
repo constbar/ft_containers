@@ -9,7 +9,7 @@
 //  : public std::iterator<std::random_access_iterator_tag, T, /* DIST i can add here void void void */>
 // 3. need i base func?
 // 4. why destructor virtual?
-// 5. far will you test just iterators
+// 5. will you test just iterators
 
 	// typedef C iterator_category;
 	// 	typedef T value_type;

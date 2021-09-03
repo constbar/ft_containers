@@ -5,7 +5,7 @@
 // how to make const iter
 // can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
-// 2. sprosit' farida pro try and catch
+// 2. sprosit' pro try and catch
 // 3. try and catchi before allocs
 // 4. swap can live here
 // 5. expicit for what
@@ -117,7 +117,6 @@ namespace diy {
 			}
 			
 			void push_back(const T &input_val) {
-				// maybe size + 1 > capacity or here maybe reserve instead realloc
 				if (this->v_size == this->v_capacity) {
 					if (!this->v_size)
 						realloc(1);
@@ -231,16 +230,12 @@ namespace diy {
 
 #endif
 
-/**
-    * - Iterators:
-    * rbegin:               Return reverse iterator to reverse beginning
-    * rend:                 Return reverse iterator to reverse end
-    *
-    * - Modifiers:
-    * assign:               Assign vector content
-    * insert:               Insert elements
-    * erase:                Erase elements
-    *
-    * - Non-member function overloads:
-    * relational operators: Relational operators for vector
-*/
+    // * rbegin:               
+    // * rend:             
+
+
+    // * assign:             
+    // * insert:            
+    // * erase:              
+    // *
+    // * relational operators?? wtf???: Relational operators for vector

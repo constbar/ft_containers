@@ -10,7 +10,7 @@
 #include "ranit.hpp"
 #include "iter.hpp"
 
-
+// /* 
 int main() {
 
 
@@ -22,16 +22,16 @@ int main() {
 	vec.push_back(12);
 	vec.push_back(13);
 
-	int ex = 99;
-	vec.assign(2, ex);
-	std::cout << vec[0] << std::endl; 
-	std::cout << vec[1] << std::endl;
-	std::cout << vec.size() << std::endl;
-	std::cout << vec.capacity() << std::endl;
+	// int ex = 99;
+	// vec.assign(2, ex);
+	// std::cout << vec[0] << std::endl; 
+	// std::cout << vec[1] << std::endl;
+	// std::cout << vec.size() << std::endl;
+	// std::cout << vec.capacity() << std::endl;
 
 
 	// diy::vector<int>::iterator it;
-	// diy::vector<int>::const_iterator cit;
+	diy::vector<int>::const_iterator cit = vec.begin();
 
 	// it = vec.begin();
 	// it++;
@@ -39,11 +39,11 @@ int main() {
 	// std::cout << *it << std::endl;
 
 	// cit = vec.begin();
-	// cit++;
-	// // *cit = 20;
-	// ++cit;
-	// std::cout << *cit << std::endl;
-	// std::cout << vec[3] << std::endl;
+	cit++;
+	// *cit = 20;
+	++cit;
+	std::cout << *cit << std::endl;
+	std::cout << vec[3] << std::endl;
 #endif
 
 
@@ -55,7 +55,7 @@ int main() {
 	// kek.at(200);
 	std::cout << kek.size() << std::endl;
 	std::cout << kek.capacity() << std::endl;
-#endif // for erase
+// #endif // for erase
 
 	// std::string arr[] = {"12", "34"};
 	// std::string ex = "ex";
@@ -74,13 +74,52 @@ int main() {
 	// std::cout << orig[5] << std::endl;
 	// std::cout << orig.size() << std::endl;
 	// std::cout << orig.capacity() << std::endl;
-
+#endif
 
 
 	return 0;
 }
+// */
 
+// #include <type_traits>
 
-// test iterator and existed func to them
-// test vector and existed func to them
-// test vector::iterators and existed func to them
+// template <class T>
+// void foo(T) {
+// 	std::cout << "T is signed" << std::endl;
+// }
+
+// template <class T,
+// class = typename std::enable_if<std::is_member_pointer<T>::value>::type>
+// void foo(T) {
+// 	std::cout << "T is unsigned " << std::endl;
+// }
+
+// int main() {
+
+// 	// foo("12.2");
+// 	foo('1');
+// 	foo(22222);
+// 	return 0;
+// }
+
+// struct Bla
+// {
+// 	template <typename T,
+// 		std::enable_if_t<std::is_integral<T>::value, int> = 0>
+// 	static void klaf(T t) {
+// 		std::cout << "int" << std::endl;
+// 	}
+
+// 	template <typename T, 
+// 		std::enable_if_t<std::is_floating_point<T>::value, int> = 0>
+// 	static void klaf(T t) {
+// 		std::cout << "float" << std::endl;
+// 	}
+// };
+
+// int main()
+// {
+// 	// Bla::klaf("a");
+// 	Bla::klaf(17.5);
+// 	Bla::klaf(65);
+// }
