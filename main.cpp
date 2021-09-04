@@ -10,7 +10,7 @@
 #include "ranit.hpp"
 #include "iter.hpp"
 
-// /* 
+/* 
 int main() {
 
 
@@ -79,7 +79,7 @@ int main() {
 
 	return 0;
 }
-// */
+*/
 
 // #include <type_traits>
 
@@ -123,3 +123,38 @@ int main() {
 // 	Bla::klaf(17.5);
 // 	Bla::klaf(65);
 // }
+
+// template <typename T, typename = std::enable_if_t<!std::is_floating_point<T>::value>>
+// bool equals(T f, T s) {
+
+// 	return f == s;
+// }
+
+// template <typename T>
+// bool equals(T f, T s,
+// std::enable_if_t<!std::is_floating_point<T>::value>* = nullptr) {
+// 	std::cout << "this is no float" << std::endl;
+// 	return f == s;
+// }
+
+// template <typename T>
+// bool equals(T f, T s,
+// std::enable_if_t<std::is_floating_point<T>::value>* = nullptr) {
+// 	std::cout << "another one" << std::endl;
+// 	return true;
+// }
+
+int main() {
+
+	// std::cout << equals(1.f, 1.f) << std::endl;
+	// std::cout << equals(1, 1) << std::endl;
+	std::string arr[] = {"1","2","3"};
+	std::vector<char> kek;
+	kek.assign(arr, arr + 4);
+
+	std::cout << kek[0] << std::endl;
+	std::cout << kek[1] << std::endl;
+	std::cout << kek[2] << std::endl;
+
+	return 0;
+}

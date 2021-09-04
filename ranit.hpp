@@ -37,7 +37,7 @@ namespace diy {
 
 		public: // maybe make it protected for just iters?
 			ranit() : ptr(NULL) {}
-			ranit(T* input) { this->ptr = input; }
+			ranit(T* input) { this->ptr = input; } // try it with ewplace T* -> poiter
 			ranit(const iterator &other) { this->ptr = other.ptr; }
 				// this->ptr = const_cast<pointer>(other.ptr);
 

@@ -1,8 +1,6 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-// template <class T, class Allocator = std::allocator<T>>
-// how to make const iter
 // can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
 // 2. sprosit' pro try and catch
