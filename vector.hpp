@@ -7,9 +7,12 @@
 // 3. try and catchi before allocs
 // 4. swap can live here
 // 5. expicit for what
+// 6. should iter be only with <1 param>
+// 7. ENABLE IF
 
 #include "ranit.hpp"
 #include <iostream>
+#include <iterator> // to del
 
 namespace diy {
 	template <typename T>
@@ -60,6 +63,25 @@ namespace diy {
 					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
 
+			vector(const vector &other) { // copy?
+				
+				this->v_ptr = NULL;
+				this->v_size = other.v_size;
+				this->v_capacity = other.v_capacity;
+				this->v_allocator = other.v_allocator;
+
+				// need i this tryes?
+				try { this->v_ptr = this->v_allocator.allocate(this->v_capacity); }
+				catch(const std::exception &e) // make it cleaner
+				{
+					throw std::length_error("no alloc");
+					std::cerr << e.what() << '\n'; // to del
+				}
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
+			}
+
+
 			// idk what is it
 			// here Range construcor, creates a vector with a size equal
 
@@ -74,7 +96,7 @@ namespace diy {
 			/// end of copliens form
 
 			iterator begin() { 
-				std::cout << "usual begin?\n";
+				// std::cout << "usual begin?\n"; // to del
 				return iterator(this->v_ptr); }
 
 			const_iterator begin() const { // unused
@@ -197,32 +219,65 @@ namespace diy {
 				return *this;
 			}
 
-			vector (const vector &other) {
-				
-				this->v_ptr = NULL;
-				this->v_size = other.v_size;
-				this->v_capacity = other.v_capacity;
-				this->v_allocator = other.v_allocator;
-
-				// need i this tryes?
-				try { this->v_ptr = this->v_allocator.allocate(this->v_capacity); }
-				catch(const std::exception &e) // make it cleaner
-				{
-					throw std::length_error("no alloc");
-					std::cerr << e.what() << '\n'; // to del
-				}
-				for (size_t i = 0; i < this->v_size; i++)
-					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
-			}
-
 			void assign(size_t input_num, const T &input_val) {
 				clear();
 				while(input_num) {
 					push_back(input_val);
 					input_num--; }}
+			
+			
+			//  assign with ENABLE IF!
 
-			// iterator erase(const_iterator __position) {}
-			// iterator erase const_iterator __first, const_iterator __last
+			iterator erase(iterator first, iterator last) {
+				
+   				if (first == end())
+					return first;
+				if (first == last)
+                    return first;
+
+				iterator tmp_it(last);
+				size_t dist = diy::iter_dist(first, last);
+				size_t i = 0;
+
+				for (i = 0; last != this->end(); first++, last++, i++) { // del here
+					// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
+					this->v_allocator.destroy(&this->v_ptr[i]);
+					this->v_allocator.construct(&this->v_ptr[i], *last);
+					// std::cout << " added instead " << v_ptr[i] << " val after";
+					// std::cout << std::endl;
+				}
+
+				for (; i < this->v_size; i++) { // del here
+					// std::cout << "val " << v_ptr[i] << " adr pure destroy " << &this->v_ptr[i] << std::endl;
+					this->v_allocator.destroy(&this->v_ptr[i]);
+				}
+
+				this->v_size = this->v_size - dist;
+				// std::cout << "	 		 " << this->v_ptr + dist + 1 << std::endl;
+				// return this->v_ptr + dist;
+				return tmp_it;
+			}
+
+			iterator erase(iterator input) {
+
+				iterator tmp_it(input);
+				size_t i = 0;
+				for (i = 0; input != end() - 1; input++, i++) {
+					// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
+					this->v_allocator.destroy(&this->v_ptr[i]);
+					this->v_allocator.construct(&this->v_ptr[i], this->v_ptr[i + 1]);
+					// std::cout << " added instead " << v_ptr[i] << " val after";
+					// std::cout << std::endl;
+				}
+				// std::cout << "at the end i deleted	 	 " << &v_ptr[i] << " and value " << v_ptr[i] << std::endl;
+				this->v_allocator.destroy(&this->v_ptr[i]);
+				this->v_size--;;
+				return tmp_it;
+			}
+
+			// iterator insert(iterator) {
+
+			// }
 	};
 }
 
@@ -234,6 +289,5 @@ namespace diy {
 
     // * assign:             
     // * insert:            
-    // * erase:              
     // *
     // * relational operators?? wtf???: Relational operators for vector

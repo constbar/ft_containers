@@ -273,3 +273,101 @@ int main()
 			std::cout << "int* is a random-access iterator\n";
 		else
 			std::cout << "NINE!\n"; */
+
+
+
+
+
+
+
+
+
+// test for erase!
+// int main() {
+
+// #if 0 // orginal
+// 	std::vector<int> v;
+// 	v.push_back(111);
+// 	v.push_back(222);
+// 	v.push_back(333);
+// 	v.push_back(444);
+// 	std::vector<int>::iterator it = v.begin();
+// 	std::vector<int>::iterator et = v.begin();
+// 	et++;
+// 	et++;
+// 	std::vector<int>::iterator kek = v.erase(it, et);
+
+// 	// std::vector<int>::iterator b = v.begin();
+// 	// for (; b != v.end(); b++)
+// 		// std::cout << *b << std::endl;
+
+// 	// std::cout << v.at(0) << std::endl;
+// 	// std::cout << v.at(1) << std::endl;
+
+// 	std::cout << "* made 	" << *kek << std::endl;
+// 	// std::cout << v.at(2) << std::endl;
+// 	// std::cout << v.at(3) << std::endl;
+
+// 	// std::cout << v[0] << std::endl;
+// 	// std::cout << v[1] << std::endl;
+// 	// std::cout << v[2] << std::endl;
+// 	// std::cout << v[3] << std::endl;
+// 	// std::cout << v[4] << std::endl;
+// 	// std::cout << v[5] << std::endl;
+// 	// std::cout << v[6] << std::endl;
+	
+	
+// 	// std::cout << *kek << std::endl;
+// 	// std::cout << v[0] << std::endl;
+// 	// std::cout << v[1] << std::endl;
+// 	// std::cout << v[2] << std::endl;
+// 	std::cout << "size " << v.size() << std::endl;
+// 	std::cout << "caps " << v.capacity() << std::endl;
+// #endif
+
+// 	/// my vector
+// #if 0
+// 	diy::vector<int> vec;
+// 	vec.push_back(111);
+// 	vec.push_back(222);
+// 	vec.push_back(333);
+// 	vec.push_back(444);
+
+// 	diy::vector<int>::iterator iter = vec.begin();
+// 	diy::vector<int>::iterator eder = vec.begin();
+// 	eder++;
+// 	eder++;
+// 	diy::vector<int>::iterator d;
+// 	d = vec.erase(iter, eder);
+// 	std::cout << std::endl;
+// 	std::cout << "razimenovano " << *d << std::endl;
+
+// 	std::cout << vec.at(0) << std::endl;
+// 	std::cout << vec.at(1) << std::endl;
+// 	// std::cout << vec.at(2) << std::endl;
+// 	std::cout << vec.size() << std::endl;
+// 	std::cout << vec.capacity() << std::endl;
+// 	// std::cout << vec.at(2) << std::endl;
+// 	// std::cout << vec.at(3) << std::endl;
+// #endif
+// #if 1 // for single erase
+// 	diy::vector<int> vec;
+// 	vec.push_back(111);
+// 	vec.push_back(222);
+// 	vec.push_back(333);
+// 	vec.push_back(444);
+
+// 	diy::vector<int>::iterator iter = vec.begin();
+// 	diy::vector<int>::iterator d;
+// 	d = vec.erase(iter);
+// 	std::cout << std::endl;
+// 	// std::cout << "razimenovano " << *d << std::endl;
+
+// 	std::cout << vec.at(0) << std::endl;
+// 	std::cout << vec.at(1) << std::endl;
+// 	std::cout << vec.at(2) << std::endl;
+// 	// std::cout << vec.at(3) << std::endl;
+// 	// std::cout << vec.size() << std::endl;
+// #endif
+// 	return 0;
+// }

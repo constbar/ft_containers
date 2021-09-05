@@ -17,8 +17,8 @@
 	// 	typedef P pointer;
 	// 	typedef R reference;
 
-namespace diy {
-	template <typename T, typename Pointer, typename Reference,
+namespace diy { // ! added = T* and ref = T& // works finially
+	template <typename T, typename Pointer = T*, typename Reference = T&,
 		typename Category = std::random_access_iterator_tag > 
 	class ranit {
 		public:
@@ -162,6 +162,13 @@ namespace diy
 		T tmp = first;
 		first = second;
 		second = tmp;
+	}
+
+	template<typename T>
+	size_t iter_dist(T first, T last) {
+		size_t dist = 0;
+		for (dist = 0; first != last; dist++, first++);
+		return dist;
 	}
 }
 
