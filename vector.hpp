@@ -3,12 +3,14 @@
 
 // can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
-// 2. sprosit' pro try and catch
-// 3. try and catchi before allocs
 // 4. swap can live here
 // 5. expicit for what
 // 6. should iter be only with <1 param>
 // 7. ENABLE IF
+// 8. check all stuff with valgrind
+// 9. you should implement iterator traits - where shold i use it?
+// 10. make all funcs from subj - implement
+// 11. need i push front
 
 #include "ranit.hpp"
 #include <iostream>
@@ -63,6 +65,22 @@ namespace diy {
 					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
 
+			template <class InputIterator>
+			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
+				typename diy::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type = 0) {
+
+				this->v_ptr = NULL;
+				this->v_size = 0;
+				this->v_capacity = 0;
+				this->v_allocator = alloc;
+
+				this->v_size = this->v_capacity = diy::iter_dist(first, last);
+				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
+				
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(this->v_ptr + i, *(first + i));
+			}
+
 			vector(const vector &other) { // copy?
 				
 				this->v_ptr = NULL;
@@ -70,17 +88,12 @@ namespace diy {
 				this->v_capacity = other.v_capacity;
 				this->v_allocator = other.v_allocator;
 
-				// need i this tryes?
-				try { this->v_ptr = this->v_allocator.allocate(this->v_capacity); }
-				catch(const std::exception &e) // make it cleaner
-				{
-					throw std::length_error("no alloc");
-					std::cerr << e.what() << '\n'; // to del
-				}
+				// i deleted try here by the way
+				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
+				
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
 			}
-
 
 			// idk what is it
 			// here Range construcor, creates a vector with a size equal
@@ -109,7 +122,7 @@ namespace diy {
 			// make it private //
 			void realloc(const size_t new_capacity) {
 				
-				pointer tmp = this->v_allocator.allocate(new_capacity); // can add here try catch 
+				pointer tmp = this->v_allocator.allocate(new_capacity);
 				
 				size_t old_size = this->v_size; //
 				if (new_capacity < this->v_size) //
@@ -206,9 +219,8 @@ namespace diy {
 
 				this->~vector();
 
-				// eto uslovie nichego ne vikinet
-				try { this->v_ptr = this->v_allocator.allocate(other.v_capacity); }
-				catch (std::exception &e) { throw std::length_error("no alloc"); }
+				// here was try and catch
+				this->v_ptr = this->v_allocator.allocate(other.v_capacity);
 				
 				this->v_size = other.v_size;
 				this->v_capacity = other.v_capacity;
@@ -233,7 +245,7 @@ namespace diy {
    				if (first == end())
 					return first;
 				if (first == last)
-                    return first;
+					return first;
 
 				iterator tmp_it(last);
 				size_t dist = diy::iter_dist(first, last);
@@ -262,7 +274,7 @@ namespace diy {
 
 				iterator tmp_it(input);
 				size_t i = 0;
-				for (i = 0; input != end() - 1; input++, i++) {
+				for (i = 0; input != this->end() - 1; input++, i++) { // added this
 					// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
 					this->v_allocator.destroy(&this->v_ptr[i]);
 					this->v_allocator.construct(&this->v_ptr[i], this->v_ptr[i + 1]);
@@ -271,23 +283,60 @@ namespace diy {
 				}
 				// std::cout << "at the end i deleted	 	 " << &v_ptr[i] << " and value " << v_ptr[i] << std::endl;
 				this->v_allocator.destroy(&this->v_ptr[i]);
-				this->v_size--;;
+				this->v_size--;
 				return tmp_it;
 			}
 
-			// iterator insert(iterator) {
 
+			// iterator insert(iterator input_it, const T &input_value) {
+			// 	iterator tmp_it(input_it);
+
+				
+			// 	// 1. realloc
+			// 	// 2.  
 			// }
+
+				
+			void insert(iterator input_it, size_t input_num, const T &input_value) {
+				
+				size_t		gap = diy::iter_dist(input_it, this->end());
+				vector		tmp_vec(input_it, this->end());
+				iterator	tmp_it = tmp_vec.begin();
+
+				// std::cout << gap << std::endl;
+
+				// test // good
+				// for (diy::vector<int>::iterator it = tmp_vec.begin(); it != tmp_vec.end(); it++)
+				// 	std::cout << "this is inside tmp " << *it << std::endl;
+
+				this->v_size = this->v_size - gap;
+				std::cout << "this->size " << this->v_size << std::endl;
+
+				while (input_num) { // check it in comparison of orig vector
+					this->v_allocator.destroy(&this->v_ptr[this->v_size]);
+					// std::cout << "ind of val " << v_size << std::endl; // to del
+					this->push_back(input_value);
+					input_num--;
+
+					// vvesti size_t i-toe
+				}
+				// + proshlij size 
+
+				for (; tmp_it != tmp_vec.end(); tmp_it++)
+					this->push_back(*tmp_it); // add destroy
+				
+				// i v etom cikle delitit' poka bil starij SIZE
+			}
 	};
 }
 
 #endif
 
-    // * rbegin:               
-    // * rend:             
+	// * rbegin:			   
+	// * rend:			 
 
 
-    // * assign:             
-    // * insert:            
-    // *
-    // * relational operators?? wtf???: Relational operators for vector
+	// * assign:			 
+	// * insert:			
+	// *
+	// * relational operators?? wtf???: Relational operators for vector

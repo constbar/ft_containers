@@ -37,7 +37,7 @@ namespace diy { // ! added = T* and ref = T& // works finially
 
 		public: // maybe make it protected for just iters?
 			ranit() : ptr(NULL) {}
-			ranit(T* input) { this->ptr = input; } // try it with ewplace T* -> poiter
+			ranit(T* input) { this->ptr = input; } // try it with ewplace T* -> poiter // just name
 			ranit(const iterator &other) { this->ptr = other.ptr; }
 				// this->ptr = const_cast<pointer>(other.ptr);
 
@@ -154,7 +154,7 @@ namespace diy { // ! added = T* and ref = T& // works finially
 
 
 
-// this for swap
+// this for swap // utils
 namespace diy
 {
 	template <typename T>
@@ -170,6 +170,14 @@ namespace diy
 		for (dist = 0; first != last; dist++, first++);
 		return dist;
 	}
+
+	template <bool, typename T = void>
+	struct enable_if {};
+
+	template <typename T>
+	struct enable_if<true, T> {
+		typedef T type;
+	};
 }
 
 #endif
