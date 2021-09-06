@@ -10,6 +10,8 @@
 // 3. need i base func?
 // 4. why destructor virtual?
 // 5. will you test just iterators
+// 6. make list of initilizition
+
 
 	// typedef C iterator_category;
 	// 	typedef T value_type;

@@ -10,6 +10,13 @@
 #include "ranit.hpp"
 #include "iter.hpp"
 
+class Man {
+	public:
+		Man() {
+			std::cout << "hola\n";
+		};
+};
+
 int main() {
 
 #if 0
@@ -77,13 +84,11 @@ int main() {
 	vc.push_back(2);
 	vc.push_back(3);
 	vc.push_back(4);
-	vc.push_back(5);
-	vc.push_back(6);
-	vc.push_back(7);
-	vc.push_back(8);
 
 	diy::vector<int>::iterator it = vc.begin();
 	it++;
+	it++;
+	// it++;
 	vc.insert(it, 2, 112);
 
 	diy::vector<int>::iterator fb = vc.begin();
@@ -95,7 +100,12 @@ int main() {
 	// std::cout << vc.size() << std::endl;
 	// std::cout << vc.capacity() << std::endl;
 
-	
+	// std::vector<Man> k1;
+	// diy::vector<Man> k2;
+	// k1.push_back(Man());
+	// k2.push_back(Man());
+	// std::vector<Man>::iterator it1 = k1.begin();
+	// diy::vector<Man>::iterator it2 = k2.begin();
 
 
 

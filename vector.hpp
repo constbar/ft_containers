@@ -11,6 +11,7 @@
 // 9. you should implement iterator traits - where shold i use it?
 // 10. make all funcs from subj - implement
 // 11. need i push front
+// 12. make list of initilizition
 
 #include "ranit.hpp"
 #include <iostream>
@@ -287,45 +288,41 @@ namespace diy {
 				return tmp_it;
 			}
 
-
 			// iterator insert(iterator input_it, const T &input_value) {
 			// 	iterator tmp_it(input_it);
-
-				
-			// 	// 1. realloc
-			// 	// 2.  
-			// }
-
 				
 			void insert(iterator input_it, size_t input_num, const T &input_value) {
 				
 				size_t		gap = diy::iter_dist(input_it, this->end());
-				vector		tmp_vec(input_it, this->end());
-				iterator	tmp_it = tmp_vec.begin();
+				vector		tmp_vc(input_it, this->end());
+				iterator	tmp_it = tmp_vc.begin();
 
-				// std::cout << gap << std::endl;
+				// std::cout << "size of GAP " << gap << std::endl; // to del
 
 				// test // good
 				// for (diy::vector<int>::iterator it = tmp_vec.begin(); it != tmp_vec.end(); it++)
 				// 	std::cout << "this is inside tmp " << *it << std::endl;
 
-				this->v_size = this->v_size - gap;
-				std::cout << "this->size " << this->v_size << std::endl;
+				size_t tmp_id = this->v_size = this->v_size - gap;
+
+				// std::cout << "this->size " << this->v_size << std::endl; // to del
+				// std::cout << "gap size " << gap << std::endl; // to del
+
+				for (size_t i = 0; i < gap; i++) {
+					// destroy [tmp_id + i]
+					std::cout << "adr of destr " << &this->v_ptr[tmp_id + i]; // del test
+					std::cout << " and val  " << this->v_ptr[tmp_id + i] << std::endl; // del test
+					this->v_allocator.destroy(&this->v_ptr[tmp_id + i]);
+				}
 
 				while (input_num) { // check it in comparison of orig vector
-					this->v_allocator.destroy(&this->v_ptr[this->v_size]);
 					// std::cout << "ind of val " << v_size << std::endl; // to del
 					this->push_back(input_value);
 					input_num--;
-
-					// vvesti size_t i-toe
 				}
-				// + proshlij size 
 
-				for (; tmp_it != tmp_vec.end(); tmp_it++)
-					this->push_back(*tmp_it); // add destroy
-				
-				// i v etom cikle delitit' poka bil starij SIZE
+				for (; tmp_it != tmp_vc.end(); tmp_it++)
+					this->push_back(*tmp_it);
 			}
 	};
 }

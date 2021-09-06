@@ -3,7 +3,7 @@ SRCS = main.cpp
 HEADER = vector.hpp ranit.hpp iter.hpp
  
 OBJS = $(SRCS:.cpp=.o)
-CLANG = clang++ -std=c++98 #-fsanitize=address
+CLANG = clang++ -std=c++98 -fsanitize=address
 # CLANG = clang++ -std=c++98 #-Wall -Werror -Wextra -fsanitize=address
 
 all: $(NAME)
