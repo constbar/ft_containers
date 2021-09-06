@@ -2,6 +2,7 @@
 #include <iterator>
 #include <vector>
 #include <list>
+#include <stack>
 
 #include <numeric> // chech it
 #include <typeinfo> // typeid
@@ -19,100 +20,33 @@ class Man {
 
 int main() {
 
-#if 0
-	std::vector<int> vec;
-	vec.push_back(1);
-	vec.push_back(2);
-	vec.push_back(3);
-	vec.push_back(4);
-	vec.push_back(5);
+	diy::vector<int> vec1;
+	vec1.push_back(1);
+	vec1.push_back(1);
+	vec1.push_back(1);
+	diy::vector<int>::iterator it1;
+
+	diy::vector<int> vec2;
+	vec2.push_back(4);
+	vec2.push_back(5);
+	vec2.push_back(6);
+	vec2.push_back(6);
+	diy::vector<int>::iterator it2;
 
 
-	std::vector<int>::iterator be = vec.begin();
-	be++;
-	std::vector<int>::iterator eb = vec.end();
-	eb--;
+	// diy::swap(vec1, vec2);
+	// std::cout << vec1[0] << std::endl;
+	// std::cout << vec1[1] << std::endl;
+	// std::cout << vec1[2] << std::endl;
+	// std::cout << std::boolalpha << (it1 == it2) << std::endl;
 
-
-	std::vector<int> n(be, eb);
-	std::cout << n[0] << std::endl;
-	std::cout << n[1] << std::endl;
-	std::cout << n[2] << std::endl;
-#endif
-#if 0
-
-	std::vector<int> myvector (3,100);
-	std::vector<int>::iterator it;
-
-	// std::cout << myvector[0] << std::endl;
-	// std::cout << myvector[1] << std::endl;
-	// std::cout << myvector[2] << std::endl;
-	// std::cout << "size " << myvector.size() << std::endl;
-	// std::cout << "capacity " << myvector.capacity() << std::endl;
-
-	it = myvector.begin();
-	// it = myvector.insert(it, 200);
-
-	// std::cout << std::endl;
-	// for (; it != myvector.end(); it++)
-	// 	std::cout << *it << std::endl;
-
-	myvector.insert (it, 2, 300);
-
-	std::cout << std::endl;
-	for (std::vector<int>::iterator kk = myvector.begin(); kk != myvector.end(); kk++)
-		std::cout << *kk << std::endl;
-	
-	// // "it" no longer valid, get a new one:
-	// it = myvector.begin();
-
-	// std::vector<int> anothervector (2,400);
-	// myvector.insert (it+2,anothervector.begin(),anothervector.end());
-
-	// int myarray [] = { 501,502,503 };
-	// myvector.insert (myvector.begin(), myarray, myarray+3);
-
-	// std::cout << "myvector contains:";
-	// for (it=myvector.begin(); it<myvector.end(); it++)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
-#endif
-#if 1
-
-	diy::vector<int> vc;
-	vc.push_back(1);
-	vc.push_back(2);
-	vc.push_back(3);
-	vc.push_back(4);
-
-	diy::vector<int>::iterator it = vc.begin();
-	it++;
-	it++;
-	// it++;
-	vc.insert(it, 2, 112);
-
-	diy::vector<int>::iterator fb = vc.begin();
-	diy::vector<int>::iterator fe = vc.end();
-	for (;fb != fe; fb++)
-		std::cout << *fb << std::endl;
-	
-	// std::cout << &vc << std::endl;
-	// std::cout << vc.size() << std::endl;
-	// std::cout << vc.capacity() << std::endl;
-
-	// std::vector<Man> k1;
-	// diy::vector<Man> k2;
-	// k1.push_back(Man());
-	// k2.push_back(Man());
-	// std::vector<Man>::iterator it1 = k1.begin();
-	// diy::vector<Man>::iterator it2 = k2.begin();
+	diy::vector<int> v;
+	diy::vector<int>::iterator f = v.begin();
+	diy::vector<int>::iterator l = vec2.end();
+	std::cout << std::boolalpha << (f < l) << std::endl;
 
 
 
 
-#endif
-
-
-	
 	return 0;
 }

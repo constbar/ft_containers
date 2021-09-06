@@ -3,25 +3,28 @@
 
 // can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
-// 4. swap can live here
 // 5. expicit for what
 // 6. should iter be only with <1 param>
-// 7. ENABLE IF
 // 8. check all stuff with valgrind
-// 9. you should implement iterator traits - where shold i use it?
 // 10. make all funcs from subj - implement
-// 11. need i push front
 // 12. make list of initilizition
+// 13. relational operators?? wtf???: Relational operators for vector || non member funcs overload
+// 14. iterators_traits, nado li ih ispol'zovat'?
+// 15. reverse_iterator
+// 16. enable_if, // +
+// 17. is_integral // in TEmplate use plz craft func
+// 18. equal/lexicographical compare,  
+// 19. std::pair 
+// 20. std::make_pair, must be reimplemented
+// 21. test all pair / make pair / rev traits
 
 #include "ranit.hpp"
 #include <iostream>
 #include <iterator> // to del
 
 namespace diy {
-	template <typename T>
+	template <typename T> // class Alloc = std::allocator<T> // add it in friendly funcs
 	class vector {
-
-		public:
 
 		public:
 			typedef T*				pointer;
@@ -31,12 +34,13 @@ namespace diy {
 
  			typedef std::ptrdiff_t	difference_type;
 
-			typedef typename std::allocator<T>					allocator_type;
-			typedef typename diy::ranit<T, pointer, reference>	iterator;
-			typedef typename diy::ranit<T, const T*, const T&>	const_iterator;
-			// add reverse const and non-c
+			typedef typename std::allocator<T>						allocator_type;
+			typedef typename diy::ranit<T, pointer, reference>		iterator;
+			typedef typename diy::ranit<T, const T*, const T&>		const_iterator;
+			typedef typename diy::rev_ranit<T, pointer, reference>	reverse_iterator;
+			typedef typename diy::rev_ranit<T, const T*, const T&>	const_reverse_iterator;
 
-		public: // make it private
+		private:
 			pointer			v_ptr;
 			size_t			v_size;
 			size_t			v_capacity;
@@ -66,7 +70,7 @@ namespace diy {
 					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
 
-			template <class InputIterator>
+			template <typename InputIterator> // made typename // change everywhere std::is integral
 			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
 				typename diy::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type = 0) {
 
@@ -96,6 +100,24 @@ namespace diy {
 					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
 			}
 
+			vector &operator=(const vector &other) {
+				
+				if (this == &other)
+					return *this;
+
+				this->~vector();
+
+				this->v_ptr = this->v_allocator.allocate(other.v_capacity);
+				
+				this->v_size = other.v_size;
+				this->v_capacity = other.v_capacity;
+				
+				for (size_t i = 0; i < this->v_size; ++i)
+					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
+				
+				return *this;
+			}
+
 			// idk what is it
 			// here Range construcor, creates a vector with a size equal
 
@@ -107,41 +129,18 @@ namespace diy {
 				this->v_ptr = NULL;
 			}
 
-			/// end of copliens form
-
-			iterator begin() { 
-				// std::cout << "usual begin?\n"; // to del
-				return iterator(this->v_ptr); }
-
-			const_iterator begin() const { // unused
-				std::cout << "const begin\n";
-				return const_iterator(this->v_ptr); }
-
+			// iterators
+			iterator begin() { return iterator(this->v_ptr); } // works only this
+			const_iterator begin() const { return const_iterator(this->v_ptr); }
 			iterator end() { return iterator(this->v_ptr + this->v_size); }
 			const_iterator end() const { return const_iterator(this->v_ptr + this->v_size); }
 
-			// make it private //
-			void realloc(const size_t new_capacity) {
-				
-				pointer tmp = this->v_allocator.allocate(new_capacity);
-				
-				size_t old_size = this->v_size; //
-				if (new_capacity < this->v_size) //
-					this->v_size = new_capacity; //
-
-				for (size_t i = 0; i < this->v_size; i++)
-					this->v_allocator.construct(&tmp[i], this->v_ptr[i]);
-
-				// this->~vector(); // it was here but i dont belive in ~
-				
-				for (size_t i = 0; i < old_size; i++) //
-					this->v_allocator.destroy(&this->v_ptr[i]); //
-				this->v_allocator.deallocate(this->v_ptr, this->v_capacity); //
-
-				this->v_capacity = new_capacity;
-				this->v_ptr = tmp;
-			}
-
+			// reverse_iterators
+			reverse_iterator rbegin() { return reverse_iterator(this->v_ptr + this->v_size - 1); }
+			const_reverse_iterator rbegin() const { return const_reverse_iterator(this->v_ptr + this->v_size - 1); }
+			reverse_iterator rend() { return reverse_iterator(this->v_ptr - 1); }
+			const_reverse_iterator rend() const { return const_reverse_iterator(this->v_ptr - 1); }
+		
 			void reserve(size_t input_num) {
 
 				if (input_num <= this->v_capacity)
@@ -213,25 +212,6 @@ namespace diy {
 			reference back() { return this->v_ptr[this->v_size - 1]; }
 			const_reference back() const { return this->v_ptr[this->v_size - 1]; }
 
-			vector &operator=(const vector &other) {
-				
-				if (this == &other)
-					return *this;
-
-				this->~vector();
-
-				// here was try and catch
-				this->v_ptr = this->v_allocator.allocate(other.v_capacity);
-				
-				this->v_size = other.v_size;
-				this->v_capacity = other.v_capacity;
-				
-				for (size_t i = 0; i < this->v_size; ++i)
-					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
-				
-				return *this;
-			}
-
 			void assign(size_t input_num, const T &input_val) {
 				clear();
 				while(input_num) {
@@ -243,7 +223,7 @@ namespace diy {
 
 			iterator erase(iterator first, iterator last) {
 				
-   				if (first == end())
+   				// if (first == end()) // this->end()?
 					return first;
 				if (first == last)
 					return first;
@@ -287,35 +267,34 @@ namespace diy {
 				this->v_size--;
 				return tmp_it;
 			}
-
-			// iterator insert(iterator input_it, const T &input_value) {
-			// 	iterator tmp_it(input_it);
-				
+			// peredelat' destroy look at comment
 			void insert(iterator input_it, size_t input_num, const T &input_value) {
-				
-				size_t		gap = diy::iter_dist(input_it, this->end());
+
+				size_t		dist = diy::iter_dist(input_it, this->end());
 				vector		tmp_vc(input_it, this->end());
 				iterator	tmp_it = tmp_vc.begin();
 
-				// std::cout << "size of GAP " << gap << std::endl; // to del
+				// std::cout << "size of DIST-begin to end\t" << dist << std::endl; // to del
 
-				// test // good
-				// for (diy::vector<int>::iterator it = tmp_vec.begin(); it != tmp_vec.end(); it++)
+				// // test // good // inside tmp
+				// for (diy::vector<int>::iterator it = tmp_vc.begin(); it != tmp_vc.end(); it++)
 				// 	std::cout << "this is inside tmp " << *it << std::endl;
 
-				size_t tmp_id = this->v_size = this->v_size - gap;
+				size_t indx_of_begin = this->v_size = this->v_size - dist;
 
 				// std::cout << "this->size " << this->v_size << std::endl; // to del
-				// std::cout << "gap size " << gap << std::endl; // to del
+				// std::cout << "dist size " << dist << std::endl; // to del
+				// std::cout << "index of begggiiiiiin\t\t" << indx_of_begin << std::endl; // to del
 
-				for (size_t i = 0; i < gap; i++) {
-					// destroy [tmp_id + i]
-					std::cout << "adr of destr " << &this->v_ptr[tmp_id + i]; // del test
-					std::cout << " and val  " << this->v_ptr[tmp_id + i] << std::endl; // del test
-					this->v_allocator.destroy(&this->v_ptr[tmp_id + i]);
+				// // destroy dolzhen bit' s nachala this->ptr + sdig do kona vsego massiva
+				// std::cout << "\n";
+				for (size_t i = 0; i < dist; i++) {
+					// std::cout << "adr of destr " << &this->v_ptr[indx_of_begin + i]; // del test
+					// std::cout << " and val  " << this->v_ptr[indx_of_begin + i] << std::endl; // del test
+					this->v_allocator.destroy(&this->v_ptr[indx_of_begin + i]);
 				}
 
-				while (input_num) { // check it in comparison of orig vector
+				while (input_num) {
 					// std::cout << "ind of val " << v_size << std::endl; // to del
 					this->push_back(input_value);
 					input_num--;
@@ -323,17 +302,140 @@ namespace diy {
 
 				for (; tmp_it != tmp_vc.end(); tmp_it++)
 					this->push_back(*tmp_it);
+				// return; // here leak
+			}
+
+			iterator insert(iterator input_it, const T &input_value) {
+			
+				difference_type ind = input_it - this->begin();
+				// std::cout << "its a ind " << ind << std::endl;
+				insert(input_it, 1, input_value);
+				iterator tmp_it(&this->v_ptr[ind]);
+				return tmp_it;
+			}
+
+			template <typename InputIterator>
+			void insert(iterator pos, InputIterator first, InputIterator last,
+				typename diy::enable_if<!std::is_integral<InputIterator>::value >::type* = 0) {
+				
+				vector		tmp_vc(pos, this->end());
+				iterator	tmp_it = tmp_vc.begin();
+				
+				size_t dist_dst = diy::iter_dist(pos, this->end());
+				// std::cout << "dist_dst till end " << dist_dst << std::endl; //  !! neceseaary
+
+				size_t indx = this->v_size - dist_dst;
+				// std::cout << "index of pos " << indx << std::endl;
+
+				this->v_size = this->v_size - dist_dst;
+
+				std::cout << "\nneed to clean:" << std::endl;
+				for (size_t i = 0; i < dist_dst; i++) {
+					// std::cout << "val of delete " << this->v_ptr[indx + i]  << " and adrr ";
+					// std::cout << &this->v_ptr[indx + i] << std::endl;
+					this->v_allocator.destroy(&this->v_ptr[indx + i]);
+				}
+
+				for (; first != last; first++)
+					this->push_back(*first);
+
+				for (; tmp_it != tmp_vc.end(); tmp_it++)
+					this->push_back(*tmp_it);
+			}
+
+			// NNNN				--  ASSIGN WITH TEMPL   --				NNNNN
+			// template <class InputIterator>
+            // void assign (InputIterator first, InputIterator last,
+            //             typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+            // {
+            //     clear();
+
+            //     // Reallocating only if new capacity exceeds previous
+            //     size_type n = static_cast<size_type>(last - first);
+            //     if (n > _capacity)
+            //     {
+            //         _alloc.deallocate(_vector, _capacity);
+            //         _vector = _alloc.allocate(n);
+            //     }
+                
+            //     size_type i = 0;
+            //     for (; first != last; ++i, ++first)
+            //         _alloc.construct(&_vector[i], *first);
+            //     _size = i;
+            // }
+
+			
+
+		private:
+			void realloc(const size_t new_capacity) {
+				
+				pointer tmp = this->v_allocator.allocate(new_capacity);
+				
+				size_t old_size = this->v_size; //
+				if (new_capacity < this->v_size) //
+					this->v_size = new_capacity; //
+
+				for (size_t i = 0; i < this->v_size; i++)
+					this->v_allocator.construct(&tmp[i], this->v_ptr[i]);
+
+				// this->~vector(); // it was here but i dont belive in ~
+				
+				for (size_t i = 0; i < old_size; i++) //
+					this->v_allocator.destroy(&this->v_ptr[i]); //
+				this->v_allocator.deallocate(this->v_ptr, this->v_capacity); //
+
+				this->v_capacity = new_capacity;
+				this->v_ptr = tmp;
 			}
 	};
 }
 
+// need i alloc here??
+namespace diy {
+	
+	template <typename T>
+	void swap(const diy::vector<T> &f, const diy::vector<T> &s) { f.swap(s); }
+
+	template <typename T>
+	bool operator>=(const vector<T> &f, const vector<T> &s) { return !(f < s); }
+
+	// TEST LEX GRAF CMP  !!!
+
+
+
+	// 	template< class T, class Alloc >
+	// bool operator==( const std::vector<T,Alloc>& lhs,
+	//                  const std::vector<T,Alloc>& rhs );
+	// (until C++20)
+	// template< class T, class Alloc >
+	// constexpr bool operator==( const std::vector<T,Alloc>& lhs,
+	//                            const std::vector<T,Alloc>& rhs );
+	// (since C++20)
+	// template< class T, class Alloc >
+	// bool operator!=( const std::vector<T,Alloc>& lhs,
+	//                  const std::vector<T,Alloc>& rhs );
+	// (2)	(until C++20)
+	// template< class T, class Alloc >
+	// bool operator<( const std::vector<T,Alloc>& lhs,
+	//                 const std::vector<T,Alloc>& rhs );
+	// (3)	(until C++20)
+	// template< class T, class Alloc >
+	// bool operator<=( const std::vector<T,Alloc>& lhs,
+	//                  const std::vector<T,Alloc>& rhs );
+	// (4)	(until C++20)
+	// template< class T, class Alloc >
+	// bool operator>( const std::vector<T,Alloc>& lhs,
+	//                 const std::vector<T,Alloc>& rhs );
+	// (5)	(until C++20)
+	// template< class T, class Alloc >
+	// bool operator>=( const std::vector<T,Alloc>& lhs,
+	//                  const std::vector<T,Alloc>& rhs );
+	// (6)	(until C++20)
+
+
+
+}
+
+
+
 #endif
-
-	// * rbegin:			   
-	// * rend:			 
-
-
-	// * assign:			 
-	// * insert:			
-	// *
-	// * relational operators?? wtf???: Relational operators for vector
