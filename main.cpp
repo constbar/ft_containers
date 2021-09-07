@@ -20,32 +20,33 @@ class Man {
 
 int main() {
 
-	diy::vector<int> vec1;
-	vec1.push_back(1);
-	vec1.push_back(1);
-	vec1.push_back(1);
-	diy::vector<int>::iterator it1;
+	std::vector<int> vec1;
+	vec1.push_back(4);
+	vec1.push_back(55);
+	vec1.push_back(55);
+	vec1.push_back(55);
+	vec1.push_back(55);
+	vec1.push_back(55);
+	std::vector<int>::iterator it1 = vec1.begin();
+	std::vector<int>::iterator la1 = vec1.end();
 
-	diy::vector<int> vec2;
-	vec2.push_back(4);
-	vec2.push_back(5);
-	vec2.push_back(6);
-	vec2.push_back(6);
-	diy::vector<int>::iterator it2;
+	std::vector<int> vec2;
+	vec2.push_back(3);
+	vec2.push_back(3);
+	std::vector<int>::iterator it2 = vec2.begin();
+	std::vector<int>::iterator la2 = vec2.end();
 
-
-	// diy::swap(vec1, vec2);
-	// std::cout << vec1[0] << std::endl;
-	// std::cout << vec1[1] << std::endl;
+	vec1.assign(it2, la2);
+	std::cout << vec1[0] << std::endl;
+	std::cout << vec1[1] << std::endl;
 	// std::cout << vec1[2] << std::endl;
-	// std::cout << std::boolalpha << (it1 == it2) << std::endl;
 
-	diy::vector<int> v;
-	diy::vector<int>::iterator f = v.begin();
-	diy::vector<int>::iterator l = vec2.end();
-	std::cout << std::boolalpha << (f < l) << std::endl;
+	// std::cout << "asd" << std::endl;
 
+	// bool y = diy::lexicographical_compare(it1, la1, it2, la2);
+	// std::cout << std::boolalpha << !y << std::endl;
 
+	// bool y = std::equal();
 
 
 	return 0;

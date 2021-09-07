@@ -11,12 +11,12 @@
 // 13. relational operators?? wtf???: Relational operators for vector || non member funcs overload
 // 14. iterators_traits, nado li ih ispol'zovat'?
 // 15. reverse_iterator
-// 16. enable_if, // +
 // 17. is_integral // in TEmplate use plz craft func
-// 18. equal/lexicographical compare,  
 // 19. std::pair 
 // 20. std::make_pair, must be reimplemented
 // 21. test all pair / make pair / rev traits
+// 22. alloc inside of friendly funcs?
+// 23. test if all funcs the same std::vector and diy::vector??
 
 #include "ranit.hpp"
 #include <iostream>
@@ -70,9 +70,9 @@ namespace diy {
 					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
 
-			template <typename InputIterator> // made typename // change everywhere std::is integral
+			template <typename InputIterator> // remade is_integral //  made typename // change everywhere std::is integral
 			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-				typename diy::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type = 0) {
+				typename diy::enable_if<!diy::is_integral<InputIterator>::value, InputIterator>::type = 0) {
 
 				this->v_ptr = NULL;
 				this->v_size = 0;
@@ -219,7 +219,26 @@ namespace diy {
 					input_num--; }}
 			
 			
-			//  assign with ENABLE IF!
+			template <typename InpIt> // test it / dont belive at it
+			void assign(InpIt first, InpIt last,
+				typename diy::enable_if<!diy::is_integral<InpIt>::value >::type* = 0) {
+			
+				size_t dist = diy::iter_dist(first, last);
+				
+				for (size_t i = 0; i < this->v_size; i++)
+					this->_allocator.destroy(this->v_ptr + i);
+				
+				if (dist > this->v_capacity) {
+					this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
+					this->v_ptr = this->v_allocator.allocate(dist);
+					this->v_capacity = dist;
+				}
+
+				for (size_t i = 0; i < dist; i++)
+					this->_allocator.construct(this->v_ptr + i, *(first + i));
+
+				this->v_size = dist;
+			}
 
 			iterator erase(iterator first, iterator last) {
 				
@@ -314,9 +333,9 @@ namespace diy {
 				return tmp_it;
 			}
 
-			template <typename InputIterator>
-			void insert(iterator pos, InputIterator first, InputIterator last,
-				typename diy::enable_if<!std::is_integral<InputIterator>::value >::type* = 0) {
+			template <typename InpIt> // remade this integral
+			void insert(iterator pos, InpIt first, InpIt last,
+				typename diy::enable_if<!diy::is_integral<InpIt>::value >::type* = 0) {
 				
 				vector		tmp_vc(pos, this->end());
 				iterator	tmp_it = tmp_vc.begin();
@@ -343,29 +362,6 @@ namespace diy {
 					this->push_back(*tmp_it);
 			}
 
-			// NNNN				--  ASSIGN WITH TEMPL   --				NNNNN
-			// template <class InputIterator>
-            // void assign (InputIterator first, InputIterator last,
-            //             typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
-            // {
-            //     clear();
-
-            //     // Reallocating only if new capacity exceeds previous
-            //     size_type n = static_cast<size_type>(last - first);
-            //     if (n > _capacity)
-            //     {
-            //         _alloc.deallocate(_vector, _capacity);
-            //         _vector = _alloc.allocate(n);
-            //     }
-                
-            //     size_type i = 0;
-            //     for (; first != last; ++i, ++first)
-            //         _alloc.construct(&_vector[i], *first);
-            //     _size = i;
-            // }
-
-			
-
 		private:
 			void realloc(const size_t new_capacity) {
 				
@@ -390,52 +386,32 @@ namespace diy {
 	};
 }
 
-// need i alloc here??
 namespace diy {
 	
 	template <typename T>
-	void swap(const diy::vector<T> &f, const diy::vector<T> &s) { f.swap(s); }
+	void swap(const diy::vector<T> &lv, const diy::vector<T> &rv) { lv.swap(rv); }
 
 	template <typename T>
-	bool operator>=(const vector<T> &f, const vector<T> &s) { return !(f < s); }
+	bool operator==(const diy::vector<T> &lv, const diy::vector<T> &rv) {
+		return lv.size() == rv.size() && diy::equal(lv.begin(), lv.end(), rv.begin());
+	}
 
-	// TEST LEX GRAF CMP  !!!
+	template <typename T>
+	bool operator<(const diy::vector<T> &lv, const diy::vector<T> &rv) {
+		return diy::lexicographical_compare(lv.begin(), lv.end(), rv.begin(), rv.end());
+	}
+	
+	template <typename T>
+	bool operator!=(const diy::vector<T> &lv, const diy::vector<T> &rv) { return !(lv == rv); }
 
+	template <typename T>
+	bool operator>=(const diy::vector<T> &lv, const diy::vector<T> &rv) { return !(lv < rv); }
 
+	template <typename T>
+	bool operator<=(const diy::vector<T> &lv, const diy::vector<T> &rv) { return !(rv < lv); }
 
-	// 	template< class T, class Alloc >
-	// bool operator==( const std::vector<T,Alloc>& lhs,
-	//                  const std::vector<T,Alloc>& rhs );
-	// (until C++20)
-	// template< class T, class Alloc >
-	// constexpr bool operator==( const std::vector<T,Alloc>& lhs,
-	//                            const std::vector<T,Alloc>& rhs );
-	// (since C++20)
-	// template< class T, class Alloc >
-	// bool operator!=( const std::vector<T,Alloc>& lhs,
-	//                  const std::vector<T,Alloc>& rhs );
-	// (2)	(until C++20)
-	// template< class T, class Alloc >
-	// bool operator<( const std::vector<T,Alloc>& lhs,
-	//                 const std::vector<T,Alloc>& rhs );
-	// (3)	(until C++20)
-	// template< class T, class Alloc >
-	// bool operator<=( const std::vector<T,Alloc>& lhs,
-	//                  const std::vector<T,Alloc>& rhs );
-	// (4)	(until C++20)
-	// template< class T, class Alloc >
-	// bool operator>( const std::vector<T,Alloc>& lhs,
-	//                 const std::vector<T,Alloc>& rhs );
-	// (5)	(until C++20)
-	// template< class T, class Alloc >
-	// bool operator>=( const std::vector<T,Alloc>& lhs,
-	//                  const std::vector<T,Alloc>& rhs );
-	// (6)	(until C++20)
-
-
-
+	template <typename T>
+	bool operator>(const diy::vector<T> &lv, const diy::vector<T> &rv) { return rv < lv; }
 }
-
-
 
 #endif
