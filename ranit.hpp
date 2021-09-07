@@ -1,8 +1,10 @@
 #ifndef RAITR_HPP
 #define RAITR_HPP
 
+// #include "iter.hpp"
+#include "utils.hpp"
+
 #include <iterator>
-#include "iter.hpp"
 
 // 1. reverse_iterator : public iterator <vse params> PAGE ! 104 ! add base / add RaNit current; 
 // ? 2. nuzhno li nasledonie v iterator esli mozhno obozvat' chisto typename with std::random_access_iterator_tag smth ... 
@@ -16,13 +18,6 @@
 // 9. check  "    " instead tabs
 // 10. kak rabotaet enable if
 // 11. class != template
-
-
-	// typedef C iterator_category;
-	// 	typedef T value_type;
-	// 	typedef D difference_type;
-	// 	typedef P pointer;
-	// 	typedef R reference;
 
 namespace diy { // ! added = T* and ref = T& // works finially
 	template <typename T, typename Pointer = T*, typename Reference = T&,
@@ -160,70 +155,6 @@ namespace diy {
 			T& operator[](dif_type index) const { return this->ptr[index]; } //
 
 			dif_type operator-(rev_ranit other) const { return this->ptr - other.ptr; }
-	};
-}
-
-// for iters
-namespace diy {
-	template<typename T>
-	size_t iter_dist(T first, T last) {
-		size_t dist = 0;
-		for (dist = 0; first != last; dist++, first++);
-		return dist;
-	}
-}
-
-// for vecs
-namespace diy {
-	template <typename T>
-	void swap(T &first, T &second) {
-		T tmp = first;
-		first = second;
-		second = tmp;
-	}
-}
-
-namespace diy {
-	template <bool, typename T = void>
-	struct enable_if {};
-
-	template <typename T>
-	struct enable_if<true, T> {
-		typedef T type;
-	};
-}
-
-namespace diy {
-	template <typename InputIterator1, typename InputIterator2>
-	bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
-		InputIterator2 first2, InputIterator2 last2) {
-		
-		while (first1 != last1) {
-			if (first2 == last2 || *first2 < *first1) return false;
-			else if (*first1 < *first2) return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
-}
-
-namespace diy {
-	template <typename InputIterator1, typename InputIterator2>
-		bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
-			while (first1 != last1) {
-				if (!(*first1 == *first2))
-					return false;
-				++first1; ++first2;
-			}
-			return true;
-		}
-}
-
-namespace diy {
-	template <typename T>
-	struct is_integral {
-		static const bool value;
-		typedef std::integral_constant<bool, value> type;
 	};
 }
 

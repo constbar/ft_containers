@@ -1,6 +1,6 @@
 NAME = a.out
 SRCS = main.cpp
-HEADER = vector.hpp ranit.hpp iter.hpp
+HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp tests.hpp
  
 OBJS = $(SRCS:.cpp=.o)
 CLANG = clang++ -std=c++98 -fsanitize=address

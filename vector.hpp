@@ -17,10 +17,15 @@
 // 21. test all pair / make pair / rev traits
 // 22. alloc inside of friendly funcs?
 // 23. test if all funcs the same std::vector and diy::vector??
+// 24. make list of initilizition
+// 25. make test from subject
+// 26. test all non meber funcs enable if and others
 
 #include "ranit.hpp"
+#include "utils.hpp"
+
 #include <iostream>
-#include <iterator> // to del
+// #include <iterator> // to del
 
 namespace diy {
 	template <typename T> // class Alloc = std::allocator<T> // add it in friendly funcs
@@ -72,7 +77,7 @@ namespace diy {
 
 			template <typename InputIterator> // remade is_integral //  made typename // change everywhere std::is integral
 			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-				typename diy::enable_if<!diy::is_integral<InputIterator>::value, InputIterator>::type = 0) {
+				typename diy::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type = 0) {
 
 				this->v_ptr = NULL;
 				this->v_size = 0;
@@ -86,7 +91,7 @@ namespace diy {
 					this->v_allocator.construct(this->v_ptr + i, *(first + i));
 			}
 
-			vector(const vector &other) { // copy?
+			vector(const vector &other) { //
 				
 				this->v_ptr = NULL;
 				this->v_size = other.v_size;
@@ -141,6 +146,11 @@ namespace diy {
 			reverse_iterator rend() { return reverse_iterator(this->v_ptr - 1); }
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->v_ptr - 1); }
 		
+			reference front() { return this->v_ptr[0]; }
+			const_reference front() const { return this->v_ptr[0]; }
+			reference back() { return this->v_ptr[this->v_size - 1]; }
+			const_reference back() const { return this->v_ptr[this->v_size - 1]; }
+
 			void reserve(size_t input_num) {
 
 				if (input_num <= this->v_capacity)
@@ -160,11 +170,6 @@ namespace diy {
 				this->v_size++;
 			}
 
-			size_t size() const { return this->v_size; }
-			size_t capacity() const { return this->v_capacity; }
-			bool empty() const { return !this->v_size; }
-			size_t max_size() const { return this->v_allocator.max_size(); }
-			
 			void pop_back() {
 				if (this->v_size) {
 					this->v_allocator.destroy(&this->v_ptr[this->v_size - 1]);
@@ -172,6 +177,11 @@ namespace diy {
 				}
 			}
 
+			size_t size() const { return this->v_size; }
+			size_t capacity() const { return this->v_capacity; }
+			bool empty() const { return !this->v_size; }
+			size_t max_size() const { return this->v_allocator.max_size(); }
+			
 			void resize(size_t input_num, T input_val = T()) {
 				
 				while (this->v_size > input_num)
@@ -205,12 +215,6 @@ namespace diy {
 				if (index >= this->v_size)
 					throw std::out_of_range("out of vector");
 				return *(this->v_ptr + index); }
-
-			reference front() { return this->v_ptr[0]; }
-			const_reference front() const { return this->v_ptr[0]; }
-
-			reference back() { return this->v_ptr[this->v_size - 1]; }
-			const_reference back() const { return this->v_ptr[this->v_size - 1]; }
 
 			void assign(size_t input_num, const T &input_val) {
 				clear();
