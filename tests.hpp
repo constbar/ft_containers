@@ -294,7 +294,11 @@ class test_vector {
 
 		void test_second() {
 			// swap
-
+			// front
+			// back
+			// at
+			// []
+			// assign
 
 			std::cout << END;
 			// swap
@@ -326,8 +330,107 @@ class test_vector {
 				std::cout << *b << "\t";
 			std::cout << std::endl;
 			std::cout << "vec2 size " << vec2.size() << std::endl;
-			std::cout << "vec2 cpty"  << vec2.capacity() << std::endl;
+			std::cout << "vec2 cpty "  << vec2.capacity() << std::endl;
 			
+			// front and back
+			std::cout << "front of vec1 " << vec1.front() << std::endl;
+			std::cout << "back of vec2 " << vec2.back() << std::endl;
+
+			// []
+			std::cout << "[] of index 1 - " << vec1[1] << std::endl;
+			std::cout << "at() of index 2 - " << vec1.at(2) << std::endl;
+			try { vec1.at(3); }
+			catch(const std::exception& e)
+			{
+				std::cerr << "exception here: ";
+				std::cerr << e.what() << '\n';
+			}
+
+			// assign test
+			std::cout << "\nsimple assign" << std::endl;
+			std::cout << GRE;
+			std::cout << "vec1 before assign" << std::endl;
+			b = vec1.begin();
+			for (; b != vec1.end(); b++)
+				std::cout << *b << std::endl;
+			
+			std::cout << std::endl;
+			std::cout << BLU;
+			vec1.assign(10, "new string");
+			b = vec1.begin();
+			std::cout << "vec1 after assign" << std::endl;
+			for (; b != vec1.end(); b++)
+				std::cout << *b << std::endl;
+			std::cout << std::endl;
+			std::cout << END;
+
+			std::cout << "\nassign with iters" << std::endl;
+			std::cout << GRE;
+
+			b = vec2.begin();
+			diy::vector<std::string>::iterator l = vec2.end();
+			
+			vec1.assign(b, l);
+			std::cout << "vec1 after new assign from vec2" << std::endl;
+			for (b = vec1.begin(); b != vec1.end(); b++)
+				std::cout << *b << std::endl;
+			std::cout << std::endl;
+			std::cout << END;
+
+			// erase // test with original std::vector
+			std::cout << "\nsimple erase with 1 iter" << std::endl;
+			std::cout << YEL;
+			diy::vector<std::string> vect;
+			vect.push_back("pid"); // at
+			
+			vect.push_back("the");//
+			vect.push_back("end");
+			vect.push_back("it");
+			vect.push_back("doesnt");
+
+			vect.push_back("even");//
+			vect.push_back("matter");
+			vect.push_back("...");
+			
+			diy::vector<std::string>::iterator ers1 = vect.begin();
+			ers1 += 1;
+
+			diy::vector<std::string>::iterator ers2 = vect.begin();
+			ers2 += 5;
+			
+			std::cout << "begin from " << *ers1 << std::endl;
+			std::cout << "begin from " << *ers2 << std::endl;
+
+			vect.erase(ers1, ers2);
+
+
+			std::cout << "\nprinting all\n\n";
+			diy::vector<std::string>::iterator ite = vect.begin();
+			for (; ite != vect.end(); ite++)
+				std::cout << *ite << std::endl;
+
+			// simple assign
+			// diy::vector<std::string>::iterator ers = vect.begin();
+			// ers++;
+			// // ers++;
+			// // ers++;
+			// // std::cout << *ers << std::endl;
+			// // ers++;
+			// // ers++;
+			// // // ers++;
+
+			// vect.erase(ers);
+			
+			// diy::vector<std::string>::iterator ite = vect.begin();
+			// // std::cout << *ite << std::endl;
+			// for (; ite != vect.end(); ite++)
+			// 	std::cout << *ite << std::endl;
+			// end of simple arr
+			
+
+
+			std::cout << END;
+
 
 		}
 

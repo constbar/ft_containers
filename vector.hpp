@@ -222,15 +222,14 @@ namespace diy {
 					push_back(input_val);
 					input_num--; }}
 			
-			
 			template <typename InpIt> // test it / dont belive at it
 			void assign(InpIt first, InpIt last,
-				typename diy::enable_if<!diy::is_integral<InpIt>::value >::type* = 0) {
+				typename diy::enable_if<!std::is_integral<InpIt>::value >::type* = 0) {
 			
 				size_t dist = diy::iter_dist(first, last);
 				
 				for (size_t i = 0; i < this->v_size; i++)
-					this->_allocator.destroy(this->v_ptr + i);
+					this->v_allocator.destroy(this->v_ptr + i);
 				
 				if (dist > this->v_capacity) {
 					this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
@@ -239,14 +238,14 @@ namespace diy {
 				}
 
 				for (size_t i = 0; i < dist; i++)
-					this->_allocator.construct(this->v_ptr + i, *(first + i));
+					this->v_allocator.construct(this->v_ptr + i, *(first + i));
 
 				this->v_size = dist;
 			}
 
 			iterator erase(iterator first, iterator last) {
 				
-   				// if (first == end()) // this->end()?
+   				if (first == this->end()) // this->end()?
 					return first;
 				if (first == last)
 					return first;
@@ -275,6 +274,8 @@ namespace diy {
 			}
 
 			iterator erase(iterator input) {
+				
+				// ?? return erase(input, input + 1); ??
 
 				iterator tmp_it(input);
 				size_t i = 0;
@@ -290,6 +291,7 @@ namespace diy {
 				this->v_size--;
 				return tmp_it;
 			}
+
 			// peredelat' destroy look at comment
 			void insert(iterator input_it, size_t input_num, const T &input_value) {
 

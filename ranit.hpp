@@ -80,7 +80,11 @@ namespace diy { // ! added = T* and ref = T& // works finially
 			//maybe incorrect
 			it operator+(dif_type shift) const { return it(this->ptr + shift); }
 			it operator-(dif_type shift) const { return it(this->ptr - shift); }
-			it &operator+=(dif_type shift) const { this->ptr += shift; return *this; }
+			it &operator+=(dif_type shift) { // oshibka check other!!!
+				// std::cout << "ya tut\n";
+				this->ptr += shift;
+				// return *tmp; }
+				return *this; }
 			it &operator-=(dif_type shift) const { this->ptr -= shift; return *this; }
 			T& operator[](dif_type index) const { return this->ptr[index]; } //
 
