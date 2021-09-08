@@ -1,7 +1,6 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-// can make it faster with list prisvaivaniya
 // 1. why vector is always explisit
 // 5. expicit for what
 // 6. should iter be only with <1 param>
@@ -53,94 +52,72 @@ namespace diy {
 
 		public:
 			// invalid func
- 			vector(const allocator_type &alloc = allocator_type()) {
+ 			explicit vector(const allocator_type &alloc = allocator_type()) :
+				v_ptr(NULL),
+				v_size(0),
+				v_capacity(0),
+				v_allocator(alloc) {}
 
-				this->v_ptr = NULL;
-				this->v_size = 0;
-				this->v_capacity = 0;
-				this->v_allocator = alloc;
-			}
-
-			vector(const size_t input_num, const T &intput_val = T(),
-				const allocator_type &alloc = allocator_type()) {
+			explicit vector(const size_t input_num, const T &intput_val = T(),
+				const allocator_type &alloc = allocator_type()) : 
+				v_ptr(NULL),
+				v_size(input_num),
+				v_capacity(input_num),
+				v_allocator(alloc) {
 				
-				this->v_ptr = NULL;
-				this->v_size = input_num;
-				this->v_capacity = input_num;
-
-				this->v_allocator = alloc;
 				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
-
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&this->v_ptr[i], intput_val);
 			}
 
-			template <typename InputIterator> // remade is_integral //  made typename // change everywhere std::is integral
-			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-				typename diy::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type = 0) {
-
-				this->v_ptr = NULL;
-				this->v_size = 0;
-				this->v_capacity = 0;
-				this->v_allocator = alloc;
+			template <typename InpIt>
+			vector(InpIt first, InpIt last, const allocator_type &alloc = allocator_type(),
+				typename diy::enable_if<!std::is_integral<InpIt>::value, InpIt>::type = 0) :
+				v_ptr(NULL),
+				v_size(0),
+				v_capacity(0),
+				v_allocator(alloc) {
 
 				this->v_size = this->v_capacity = diy::iter_dist(first, last);
 				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
-				
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(this->v_ptr + i, *(first + i));
 			}
 
-			vector(const vector &other) { //
-				
+			vector(const vector &other) {
 				this->v_ptr = NULL;
 				this->v_size = other.v_size;
 				this->v_capacity = other.v_capacity;
 				this->v_allocator = other.v_allocator;
-
-				// i deleted try here by the way
 				this->v_ptr = this->v_allocator.allocate(this->v_capacity);
-				
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
 			}
 
 			vector &operator=(const vector &other) {
-				
 				if (this == &other)
 					return *this;
-
 				this->~vector();
-
 				this->v_ptr = this->v_allocator.allocate(other.v_capacity);
-				
 				this->v_size = other.v_size;
 				this->v_capacity = other.v_capacity;
-				
 				for (size_t i = 0; i < this->v_size; ++i)
 					this->v_allocator.construct(&this->v_ptr[i], *(other.v_ptr + i));
-				
 				return *this;
 			}
 
-			// idk what is it
-			// here Range construcor, creates a vector with a size equal
-
 			~vector() {
-
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.destroy(&this->v_ptr[i]);
 				this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
 				this->v_ptr = NULL;
 			}
 
-			// iterators
 			iterator begin() { return iterator(this->v_ptr); } // works only this
 			const_iterator begin() const { return const_iterator(this->v_ptr); }
 			iterator end() { return iterator(this->v_ptr + this->v_size); }
 			const_iterator end() const { return const_iterator(this->v_ptr + this->v_size); }
 
-			// reverse_iterators
 			reverse_iterator rbegin() { return reverse_iterator(this->v_ptr + this->v_size - 1); }
 			const_reverse_iterator rbegin() const { return const_reverse_iterator(this->v_ptr + this->v_size - 1); }
 			reverse_iterator rend() { return reverse_iterator(this->v_ptr - 1); }
@@ -152,7 +129,6 @@ namespace diy {
 			const_reference back() const { return this->v_ptr[this->v_size - 1]; }
 
 			void reserve(size_t input_num) {
-
 				if (input_num <= this->v_capacity)
 					return;
 				size_t m = std::max(input_num, this->v_capacity * 2);
@@ -183,7 +159,6 @@ namespace diy {
 			size_t max_size() const { return this->v_allocator.max_size(); }
 			
 			void resize(size_t input_num, T input_val = T()) {
-				
 				while (this->v_size > input_num)
 					pop_back();
 				if (input_num > this->v_capacity)
@@ -222,77 +197,60 @@ namespace diy {
 					push_back(input_val);
 					input_num--; }}
 			
-			template <typename InpIt> // test it / dont belive at it
+			template <typename InpIt>
 			void assign(InpIt first, InpIt last,
 				typename diy::enable_if<!std::is_integral<InpIt>::value >::type* = 0) {
 			
-				size_t dist = diy::iter_dist(first, last);
-				
+				size_t dist = diy::iter_dist(first, last);	
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.destroy(this->v_ptr + i);
-				
 				if (dist > this->v_capacity) {
 					this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
 					this->v_ptr = this->v_allocator.allocate(dist);
 					this->v_capacity = dist;
 				}
-
 				for (size_t i = 0; i < dist; i++)
 					this->v_allocator.construct(this->v_ptr + i, *(first + i));
-
 				this->v_size = dist;
 			}
 
 			iterator erase(iterator first, iterator last) {
-				
-   				if (first == this->end()) // this->end()?
+   				if (first == this->end())
 					return first;
 				if (first == last)
 					return first;
 
 				iterator tmp_it(last);
+				size_t start_id = this->v_size - diy::iter_dist(first, this->end());
+				
 				size_t dist = diy::iter_dist(first, last);
-				size_t i = 0;
+				// std::cout << "dist f to l " << dist << std::endl;
 
-				for (i = 0; last != this->end(); first++, last++, i++) { // del here
-					// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
+				size_t i = start_id;
+				for (; last != this->end(); first++, last++, i++) { // del here
+				// 	// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
 					this->v_allocator.destroy(&this->v_ptr[i]);
 					this->v_allocator.construct(&this->v_ptr[i], *last);
-					// std::cout << " added instead " << v_ptr[i] << " val after";
-					// std::cout << std::endl;
+				// 	// std::cout << " added instead " << v_ptr[i] << " val after";
+				// 	// std::cout << std::endl;
 				}
-
-				for (; i < this->v_size; i++) { // del here
-					// std::cout << "val " << v_ptr[i] << " adr pure destroy " << &this->v_ptr[i] << std::endl;
-					this->v_allocator.destroy(&this->v_ptr[i]);
+				size_t last_id =  i + start_id;
+				// std::cout << "index of last " << last_id << std::endl;
+				// std::cout << "how much shoul i move till end " << this->v_size - last_id << std::endl;
+				
+				for (; last_id < this->size(); last_id++) { // del here
+					std::cout << "val and id " << last_id << " " << v_ptr[last_id] << " adr pure destroy " << &this->v_ptr[last_id] << std::endl;
+					this->v_allocator.destroy(&this->v_ptr[last_id]);
 				}
 
 				this->v_size = this->v_size - dist;
-				// std::cout << "	 		 " << this->v_ptr + dist + 1 << std::endl;
-				// return this->v_ptr + dist;
+				// // std::cout << "	 		 " << this->v_ptr + dist + 1 << std::endl;
+				// // return this->v_ptr + dist;
 				return tmp_it;
 			}
 
-			iterator erase(iterator input) {
-				
-				// ?? return erase(input, input + 1); ??
+			iterator erase(iterator input) { return erase(input, input + 1); }
 
-				iterator tmp_it(input);
-				size_t i = 0;
-				for (i = 0; input != this->end() - 1; input++, i++) { // added this
-					// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
-					this->v_allocator.destroy(&this->v_ptr[i]);
-					this->v_allocator.construct(&this->v_ptr[i], this->v_ptr[i + 1]);
-					// std::cout << " added instead " << v_ptr[i] << " val after";
-					// std::cout << std::endl;
-				}
-				// std::cout << "at the end i deleted	 	 " << &v_ptr[i] << " and value " << v_ptr[i] << std::endl;
-				this->v_allocator.destroy(&this->v_ptr[i]);
-				this->v_size--;
-				return tmp_it;
-			}
-
-			// peredelat' destroy look at comment
 			void insert(iterator input_it, size_t input_num, const T &input_value) {
 
 				size_t		dist = diy::iter_dist(input_it, this->end());
@@ -341,7 +299,7 @@ namespace diy {
 
 			template <typename InpIt> // remade this integral
 			void insert(iterator pos, InpIt first, InpIt last,
-				typename diy::enable_if<!diy::is_integral<InpIt>::value >::type* = 0) {
+				typename diy::enable_if<!std::is_integral<InpIt>::value >::type* = 0) {
 				
 				vector		tmp_vc(pos, this->end());
 				iterator	tmp_it = tmp_vc.begin();
@@ -354,7 +312,7 @@ namespace diy {
 
 				this->v_size = this->v_size - dist_dst;
 
-				std::cout << "\nneed to clean:" << std::endl;
+				// std::cout << "\nneed to clean:" << std::endl;
 				for (size_t i = 0; i < dist_dst; i++) {
 					// std::cout << "val of delete " << this->v_ptr[indx + i]  << " and adrr ";
 					// std::cout << &this->v_ptr[indx + i] << std::endl;

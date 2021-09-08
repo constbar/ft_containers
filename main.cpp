@@ -12,22 +12,16 @@
 #include "ranit.hpp"
 #include "tests.hpp"
 
-// class Man {
-// 	public:
-// 		Man() {
-// 			std::cout << "hola\n";
-// 		};
-// };
-
 int main() {
 
 	test_vector test;
-	// test.test_const();
-	// test.test_copy();
-	// test.test_iters();
-	// test.test_first();
+	test.test_const();
+	test.test_copy();
+	test.test_iters();
+	test.test_first();
 	test.test_second();
-	// erase doenst work
+	test.test_third();
+	test.test_operators();
 	
 	return 0;
 }

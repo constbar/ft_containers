@@ -1,4 +1,4 @@
-NAME = a.out
+NAME = a.out # rename it
 SRCS = main.cpp
 HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp tests.hpp
  

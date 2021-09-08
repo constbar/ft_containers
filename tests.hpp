@@ -299,6 +299,7 @@ class test_vector {
 			// at
 			// []
 			// assign
+			// erase
 
 			std::cout << END;
 			// swap
@@ -377,18 +378,15 @@ class test_vector {
 			std::cout << std::endl;
 			std::cout << END;
 
-			// erase // test with original std::vector
-			std::cout << "\nsimple erase with 1 iter" << std::endl;
-			std::cout << YEL;
+			// erase with 2 iterators
+			std::cout << "simple erase with 2 iters" << std::endl;
 			diy::vector<std::string> vect;
-			vect.push_back("pid"); // at
-			
-			vect.push_back("the");//
+			vect.push_back("at");
+			vect.push_back("the");
 			vect.push_back("end");
 			vect.push_back("it");
 			vect.push_back("doesnt");
-
-			vect.push_back("even");//
+			vect.push_back("even");
 			vect.push_back("matter");
 			vect.push_back("...");
 			
@@ -398,43 +396,114 @@ class test_vector {
 			diy::vector<std::string>::iterator ers2 = vect.begin();
 			ers2 += 5;
 			
-			std::cout << "begin from " << *ers1 << std::endl;
-			std::cout << "begin from " << *ers2 << std::endl;
-
+			std::cout << "deleting ids 1 to 5" << std::endl;
 			vect.erase(ers1, ers2);
 
+			std::cout << "new vect now:" << std::endl;
+			std::cout << YEL;
+			diy::vector<std::string>::iterator new_iter = vect.begin();
+			for (; new_iter != vect.end(); new_iter++)
+				std::cout << *new_iter << std::endl;
 
-			std::cout << "\nprinting all\n\n";
-			diy::vector<std::string>::iterator ite = vect.begin();
-			for (; ite != vect.end(); ite++)
-				std::cout << *ite << std::endl;
+			std::cout << vect.size() << std::endl;
+			std::cout << vect.capacity() << std::endl;
 
-			// simple assign
-			// diy::vector<std::string>::iterator ers = vect.begin();
-			// ers++;
-			// // ers++;
-			// // ers++;
-			// // std::cout << *ers << std::endl;
-			// // ers++;
-			// // ers++;
-			// // // ers++;
+			// erase with 1 iter
+			diy::vector<std::string>::iterator simple_new = vect.begin();
+			simple_new++;
 
-			// vect.erase(ers);
-			
-			// diy::vector<std::string>::iterator ite = vect.begin();
-			// // std::cout << *ite << std::endl;
-			// for (; ite != vect.end(); ite++)
-			// 	std::cout << *ite << std::endl;
-			// end of simple arr
-			
+			vect.erase(simple_new);
+		
+			std::cout << "\nafter erase with 1 iter:" << std::endl;
+			new_iter = vect.begin();
+			for (; new_iter != vect.end(); new_iter++)
+				std::cout << *new_iter << std::endl;
 
-
+			std::cout << vect.size() << std::endl;
+			std::cout << vect.capacity() << std::endl;
 			std::cout << END;
-
-
 		}
 
+		void test_third() {
+			// insert
 
+			std::cout << END;
+			// insert with iters
+			std::cout << "insert with iters:" << std::endl;
+
+			diy::vector<std::string> vec1;
+			vec1.push_back("I've become so numb");
+			vec1.push_back("I can't feel you there");
+			vec1.push_back("Become so tired");
+			vec1.push_back("So much more aware");
+			diy::vector<std::string>::iterator begit1 = vec1.begin();
+			diy::vector<std::string>::iterator endit1 = vec1.end();
+
+			diy::vector<std::string> vec2;
+			vec2.push_back("1");
+			vec2.push_back("2");
+			vec2.push_back("3");
+			vec2.push_back("4");
+			vec2.push_back("5");
+			vec2.push_back("6");
+			vec2.push_back("7");
+			vec2.push_back("8");
+			vec2.push_back("9");
+			diy::vector<std::string>::iterator it2 = vec2.begin();
+			it2++;
+			it2++;
+			it2++; // now it on 4
+
+			vec2.insert(it2, begit1, endit1);
+			
+			std::cout << GRE;
+			diy::vector<std::string>::iterator new_iter = vec2.begin();
+			for (; new_iter != vec2.end(); new_iter++)
+				std::cout << *new_iter << std::endl;
+			std::cout << END;
+			std::cout << vec2.size() << std::endl;
+			std::cout << vec2.capacity() << std::endl;
+
+			// insert with num
+			it2 = vec2.begin();
+			it2 += 5;
+			std::cout << *it2 << std::endl;
+			vec2.insert(it2, "!!!!!!!!!!!");
+
+			std::cout << std::endl;
+			std::cout << BLU;
+			new_iter = vec2.begin();
+			for (; new_iter != vec2.end(); new_iter++)
+				std::cout << *new_iter << std::endl;
+			std::cout << END;
+
+			// insert with num and value
+
+			vec2.insert(it2, 3, "a	d	d	e	d");
+			std::cout << std::endl;
+			std::cout << YEL;
+			new_iter = vec2.begin();
+			for (; new_iter != vec2.end(); new_iter++)
+				std::cout << *new_iter << std::endl;
+			std::cout << END;
+		}
+
+		void test_operators() {
+			// = != >= < > ...
+	
+			diy::vector<int> foo(3,100);   // three ints with a value of 100
+			diy::vector<int> bar(2,200);   // two ints with a value of 200
+
+			std::cout << GRE;
+			if (foo == bar) std::cout << "foo and bar are equal\n";
+			if (foo != bar) std::cout << "foo and bar are not equal\n";
+			if (foo <  bar) std::cout << "foo is less than bar\n";
+			if (foo >  bar) std::cout << "foo is greater than bar\n";
+			if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+			std::cout << END;
+
+		}
 };
 
 
