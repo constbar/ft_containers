@@ -1,33 +1,14 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-// 1. why vector is always explisit
-// 5. expicit for what
-// 6. should iter be only with <1 param>
-// 8. check all stuff with valgrind
-// 10. make all funcs from subj - implement
-// 12. make list of initilizition
-// 13. relational operators?? wtf???: Relational operators for vector || non member funcs overload
-// 14. iterators_traits, nado li ih ispol'zovat'?
-// 15. reverse_iterator
-// 17. is_integral // in TEmplate use plz craft func
-// 19. std::pair 
-// 20. std::make_pair, must be reimplemented
-// 21. test all pair / make pair / rev traits
-// 22. alloc inside of friendly funcs?
-// 23. test if all funcs the same std::vector and diy::vector??
-// 24. make list of initilizition
-// 25. make test from subject
-// 26. test all non meber funcs enable if and others
-
 #include "ranit.hpp"
 #include "utils.hpp"
 
 #include <iostream>
-// #include <iterator> // to del
+#include <iterator>
 
 namespace diy {
-	template <typename T> // class Alloc = std::allocator<T> // add it in friendly funcs
+	template <typename T>
 	class vector {
 
 		public:
@@ -35,7 +16,6 @@ namespace diy {
 			typedef T&				reference;
 			typedef const T*		const_pointer;
 			typedef const T&		const_reference;
-
  			typedef std::ptrdiff_t	difference_type;
 
 			typedef typename std::allocator<T>						allocator_type;
@@ -113,7 +93,7 @@ namespace diy {
 				this->v_ptr = NULL;
 			}
 
-			iterator begin() { return iterator(this->v_ptr); } // works only this
+			iterator begin() { return iterator(this->v_ptr); }
 			const_iterator begin() const { return const_iterator(this->v_ptr); }
 			iterator end() { return iterator(this->v_ptr + this->v_size); }
 			const_iterator end() const { return const_iterator(this->v_ptr + this->v_size); }
@@ -215,37 +195,27 @@ namespace diy {
 			}
 
 			iterator erase(iterator first, iterator last) {
-   				if (first == this->end())
+				if (first == this->end())
 					return first;
 				if (first == last)
 					return first;
 
 				iterator tmp_it(last);
 				size_t start_id = this->v_size - diy::iter_dist(first, this->end());
-				
 				size_t dist = diy::iter_dist(first, last);
-				// std::cout << "dist f to l " << dist << std::endl;
-
 				size_t i = start_id;
+
 				for (; last != this->end(); first++, last++, i++) { // del here
-				// 	// std::cout << v_ptr[i] << " it is adr of dest and constr " << &this->v_ptr[i];
 					this->v_allocator.destroy(&this->v_ptr[i]);
 					this->v_allocator.construct(&this->v_ptr[i], *last);
-				// 	// std::cout << " added instead " << v_ptr[i] << " val after";
-				// 	// std::cout << std::endl;
 				}
 				size_t last_id =  i + start_id;
-				// std::cout << "index of last " << last_id << std::endl;
-				// std::cout << "how much shoul i move till end " << this->v_size - last_id << std::endl;
-				
+
 				for (; last_id < this->size(); last_id++) { // del here
 					std::cout << "val and id " << last_id << " " << v_ptr[last_id] << " adr pure destroy " << &this->v_ptr[last_id] << std::endl;
 					this->v_allocator.destroy(&this->v_ptr[last_id]);
 				}
-
 				this->v_size = this->v_size - dist;
-				// // std::cout << "	 		 " << this->v_ptr + dist + 1 << std::endl;
-				// // return this->v_ptr + dist;
 				return tmp_it;
 			}
 
@@ -256,48 +226,29 @@ namespace diy {
 				size_t		dist = diy::iter_dist(input_it, this->end());
 				vector		tmp_vc(input_it, this->end());
 				iterator	tmp_it = tmp_vc.begin();
-
-				// std::cout << "size of DIST-begin to end\t" << dist << std::endl; // to del
-
-				// // test // good // inside tmp
-				// for (diy::vector<int>::iterator it = tmp_vc.begin(); it != tmp_vc.end(); it++)
-				// 	std::cout << "this is inside tmp " << *it << std::endl;
-
 				size_t indx_of_begin = this->v_size = this->v_size - dist;
 
-				// std::cout << "this->size " << this->v_size << std::endl; // to del
-				// std::cout << "dist size " << dist << std::endl; // to del
-				// std::cout << "index of begggiiiiiin\t\t" << indx_of_begin << std::endl; // to del
-
-				// // destroy dolzhen bit' s nachala this->ptr + sdig do kona vsego massiva
-				// std::cout << "\n";
-				for (size_t i = 0; i < dist; i++) {
-					// std::cout << "adr of destr " << &this->v_ptr[indx_of_begin + i]; // del test
-					// std::cout << " and val  " << this->v_ptr[indx_of_begin + i] << std::endl; // del test
+				for (size_t i = 0; i < dist; i++)
 					this->v_allocator.destroy(&this->v_ptr[indx_of_begin + i]);
-				}
 
 				while (input_num) {
-					// std::cout << "ind of val " << v_size << std::endl; // to del
 					this->push_back(input_value);
 					input_num--;
 				}
 
 				for (; tmp_it != tmp_vc.end(); tmp_it++)
 					this->push_back(*tmp_it);
-				// return; // here leak
 			}
 
 			iterator insert(iterator input_it, const T &input_value) {
 			
 				difference_type ind = input_it - this->begin();
-				// std::cout << "its a ind " << ind << std::endl;
 				insert(input_it, 1, input_value);
 				iterator tmp_it(&this->v_ptr[ind]);
 				return tmp_it;
 			}
 
-			template <typename InpIt> // remade this integral
+			template <typename InpIt>
 			void insert(iterator pos, InpIt first, InpIt last,
 				typename diy::enable_if<!std::is_integral<InpIt>::value >::type* = 0) {
 				
@@ -305,45 +256,31 @@ namespace diy {
 				iterator	tmp_it = tmp_vc.begin();
 				
 				size_t dist_dst = diy::iter_dist(pos, this->end());
-				// std::cout << "dist_dst till end " << dist_dst << std::endl; //  !! neceseaary
-
 				size_t indx = this->v_size - dist_dst;
-				// std::cout << "index of pos " << indx << std::endl;
-
 				this->v_size = this->v_size - dist_dst;
 
-				// std::cout << "\nneed to clean:" << std::endl;
-				for (size_t i = 0; i < dist_dst; i++) {
-					// std::cout << "val of delete " << this->v_ptr[indx + i]  << " and adrr ";
-					// std::cout << &this->v_ptr[indx + i] << std::endl;
+				for (size_t i = 0; i < dist_dst; i++)
 					this->v_allocator.destroy(&this->v_ptr[indx + i]);
-				}
-
 				for (; first != last; first++)
 					this->push_back(*first);
-
 				for (; tmp_it != tmp_vc.end(); tmp_it++)
 					this->push_back(*tmp_it);
 			}
 
+			allocator_type get_allocator() const { return this->v_allocator; }
+
 		private:
 			void realloc(const size_t new_capacity) {
-				
 				pointer tmp = this->v_allocator.allocate(new_capacity);
-				
-				size_t old_size = this->v_size; //
-				if (new_capacity < this->v_size) //
-					this->v_size = new_capacity; //
+				size_t old_size = this->v_size;
 
+				if (new_capacity < this->v_size)
+					this->v_size = new_capacity;
 				for (size_t i = 0; i < this->v_size; i++)
 					this->v_allocator.construct(&tmp[i], this->v_ptr[i]);
-
-				// this->~vector(); // it was here but i dont belive in ~
-				
-				for (size_t i = 0; i < old_size; i++) //
-					this->v_allocator.destroy(&this->v_ptr[i]); //
-				this->v_allocator.deallocate(this->v_ptr, this->v_capacity); //
-
+				for (size_t i = 0; i < old_size; i++)
+					this->v_allocator.destroy(&this->v_ptr[i]);
+				this->v_allocator.deallocate(this->v_ptr, this->v_capacity);
 				this->v_capacity = new_capacity;
 				this->v_ptr = tmp;
 			}

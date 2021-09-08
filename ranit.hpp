@@ -1,50 +1,30 @@
 #ifndef RAITR_HPP
 #define RAITR_HPP
 
-// #include "iter.hpp"
+#include "iter.hpp"
 #include "utils.hpp"
 
 #include <iterator>
 
-// 1. reverse_iterator : public iterator <vse params> PAGE ! 104 ! add base / add RaNit current; 
-// ? 2. nuzhno li nasledonie v iterator esli mozhno obozvat' chisto typename with std::random_access_iterator_tag smth ... 
-//  : public std::iterator<std::random_access_iterator_tag, T, /* DIST i can add here void void void */>
-// 3. need i base func?
-// 4. why destructor virtual?
-// 5. will you test just iterators
-// 6. make list of initilizition
-// 7. implement of base/
-// 8. wtf of friendly funcs???
-// 9. check  "    " instead tabs
-// 10. kak rabotaet enable if
-// 11. class != template
-
-namespace diy { // ! added = T* and ref = T& // works finially
+namespace diy {
 	template <typename T, typename Pointer = T*, typename Reference = T&,
-		typename Category = std::random_access_iterator_tag > 
+		typename Category = std::random_access_iterator_tag> 
 	class ranit {
 		public:
-
 			typedef Pointer			pointer;
 			typedef Reference		reference;
 			typedef typename std::ptrdiff_t						dif_type;
 			typedef typename std::random_access_iterator_tag	category;
-
+			pointer ptr;
 			typedef ranit<T, Pointer, Reference>	it;
 			typedef ranit<T, T*, T&>				iterator;
 			typedef ranit<T, const T*, const T&>	const_iterator;
 
-		public: // make priv
-			pointer	ptr;
-
-		public: // maybe make it protected for just iters?
+		public:
 			ranit() : ptr(NULL) {}
-			ranit(T* input) { this->ptr = input; } // try it with ewplace T* -> poiter // just name
+			ranit(pointer input) : ptr(input) {}
 			ranit(const iterator &other) { this->ptr = other.ptr; }
-				// this->ptr = const_cast<pointer>(other.ptr);
 
-			// could be it -- iterator&
-			// ranit &operator=(const ranit &other) {
 			it &operator=(const it &other) {
 				if (this == &other)
 					return *this;
@@ -52,8 +32,8 @@ namespace diy { // ! added = T* and ref = T& // works finially
 				return *this;
 			}
 			
-			virtual ~ranit() {} // why virtual?
-			
+			~ranit() {}
+
 			reference operator*() const { return *this->ptr; }
 			pointer operator->() const { return this->ptr; }
 			
@@ -77,25 +57,18 @@ namespace diy { // ! added = T* and ref = T& // works finially
 			bool operator==(const it &other) const { return this->ptr == other.ptr; }
 			bool operator!=(const it &other) const { return this->ptr != other.ptr; }
 
-			//maybe incorrect
 			it operator+(dif_type shift) const { return it(this->ptr + shift); }
 			it operator-(dif_type shift) const { return it(this->ptr - shift); }
-			it &operator+=(dif_type shift) { // oshibka check other!!!
-				// std::cout << "ya tut\n";
-				this->ptr += shift;
-				// return *tmp; }
-				return *this; }
-			it &operator-=(dif_type shift) const { this->ptr -= shift; return *this; }
-			T& operator[](dif_type index) const { return this->ptr[index]; } //
-
+			it &operator+=(dif_type shift) { this->ptr += shift; return *this; }
+			it &operator-=(dif_type shift) { this->ptr -= shift; return *this; }
+			T& operator[](dif_type index) const { return this->ptr[index]; }
 			dif_type operator-(ranit other) const { return this->ptr - other.ptr; }
-			// here should be friendly funcs??
 	};
 }
 
 namespace diy {
 	template <typename T, typename Pointer = T*, typename Reference = T&,
-		typename Category = std::random_access_iterator_tag > 
+		typename Category = std::random_access_iterator_tag> 
 	class rev_ranit {
 		public:
 
@@ -103,22 +76,16 @@ namespace diy {
 			typedef Reference		reference;
 			typedef typename std::ptrdiff_t						dif_type;
 			typedef typename std::random_access_iterator_tag	category;
-
+			pointer	ptr;
 			typedef rev_ranit<T, Pointer, Reference>	rev_it;
 			typedef rev_ranit<T, T*, T&>				iterator;
 			typedef rev_ranit<T, const T*, const T&>	const_iterator;
 
-		public: // make priv
-			pointer	ptr;
-
-		public: // maybe make it protected for just iters?
+		public:
 			rev_ranit() : ptr(NULL) {}
-			rev_ranit(T* input) { this->ptr = input; } // try it with ewplace T* -> poiter // just name
+			rev_ranit(pointer input) { this->ptr = input; }
 			rev_ranit(const iterator &other) { this->ptr = other.ptr; }
-				// this->ptr = const_cast<pointer>(other.ptr);
 
-			// could be it -- iterator&
-			// rev_ranit &operator=(const rev_ranit &other) {
 			rev_it &operator=(const rev_it &other) {
 				if (this == &other)
 					return *this;
@@ -126,7 +93,7 @@ namespace diy {
 				return *this;
 			}
 			
-			virtual ~rev_ranit() {} // why virtual?
+			~rev_ranit() {}
 			
 			reference operator*() const { return *this->ptr; }
 			pointer operator->() const { return this->ptr; }
@@ -151,14 +118,13 @@ namespace diy {
 			bool operator==(const rev_it &other) const { return this->ptr == other.ptr; }
 			bool operator!=(const rev_it &other) const { return this->ptr != other.ptr; }
 
-			//maybe incorrect
 			rev_it operator+(dif_type shift) const { return rev_it(this->ptr - shift); }
 			rev_it operator-(dif_type shift) const { return rev_it(this->ptr + shift); }
 			rev_it &operator+=(dif_type shift) const { this->ptr -= shift; return *this; }
 			rev_it &operator-=(dif_type shift) const { this->ptr += shift; return *this; }
-			T& operator[](dif_type index) const { return this->ptr[index]; } //
-
+			T& operator[](dif_type index) const { return this->ptr[index]; }
 			dif_type operator-(rev_ranit other) const { return this->ptr - other.ptr; }
+			iterator base() const { return this->ptr; }
 	};
 }
 

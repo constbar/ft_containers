@@ -1,11 +1,12 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
+#include "vector.hpp"
+#include "ranit.hpp"
+#include "utils.hpp"
+
 #include <iostream>
 #include <vector>
-
-#include "vector.hpp"
-
 
 #define RED "\033[31m"
 #define GRE "\033[32m"
@@ -478,7 +479,6 @@ class test_vector {
 			std::cout << END;
 
 			// insert with num and value
-
 			vec2.insert(it2, 3, "a	d	d	e	d");
 			std::cout << std::endl;
 			std::cout << YEL;
@@ -502,7 +502,6 @@ class test_vector {
 			if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
 			if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
 			std::cout << END;
-
 		}
 };
 
