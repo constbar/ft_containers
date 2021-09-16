@@ -491,8 +491,8 @@ class test_vector {
 		void test_operators() {
 			// = != >= < > ...
 	
-			diy::vector<int> foo(3,100);   // three ints with a value of 100
-			diy::vector<int> bar(2,200);   // two ints with a value of 200
+			diy::vector<int> foo(3,100);	// three ints with a value of 100
+			diy::vector<int> bar(2,200);	// two ints with a value of 200
 
 			std::cout << GRE;
 			if (foo == bar) std::cout << "foo and bar are equal\n";
@@ -501,6 +501,60 @@ class test_vector {
 			if (foo >  bar) std::cout << "foo is greater than bar\n";
 			if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
 			if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+			std::cout << END;
+		}
+};
+
+class test_stack {
+	public:
+		void test() {
+			// all tests of constuctors and funcs
+
+			std::cout << "creating stack and fill it" << std::endl;
+			diy::stack<std::string> t1;
+			std::cout << GRE << "is empty? " << std::boolalpha << t1.empty() << std::endl;
+			t1.push("1");
+			t1.push("2");
+			t1.push("3");
+			t1.push("4");
+			std::cout << GRE;
+			std::cout << "size of stack: " << t1.size() << std::endl;
+			std::cout << "top of stack: " << t1.top() << std::endl;
+			std::cout << "is empty? " << std::boolalpha << t1.empty() << std::endl;
+			
+			std::cout << std::endl;
+			std::cout << "test of pop()" << std::endl;
+			t1.pop();
+			std::cout << "size of stack: " << t1.size() << std::endl;
+			std::cout << "top of stack: " << t1.top() << std::endl;
+			std::cout << "is empty? " << std::boolalpha << t1.empty() << std::endl;
+			std::cout << END;
+
+			std::cout << std::endl;
+			std::cout << YEL;
+			std::cout << "test of const stack with a copy constructor" << std::endl;
+			const diy::stack<std::string> t2(t1);
+			std::cout << "top of stack: " << t2.top() << std::endl;
+			std::cout << std::endl;
+			std::cout << END;
+
+			std::cout << std::endl;
+			std::cout << GRE;
+			std::cout << "test of const stack with a container input" << std::endl;
+			diy::vector<int> vect;
+			vect.push_back(11);
+			vect.push_back(22);
+			vect.push_back(33);
+			vect.push_back(44);
+			diy::stack<int> t3(vect);
+			std::cout << "size of stack: " << t3.size() << std::endl;
+			std::cout << "top of stack: " << t3.top() << std::endl;
+
+			std::cout << std::endl;
+			std::cout << "test of =" << std::endl;
+			diy::stack<int> t4;
+			t4 = t3;
+			std::cout << "top of stack: " << t4.top() << std::endl;
 			std::cout << END;
 		}
 };

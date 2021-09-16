@@ -230,12 +230,10 @@ namespace diy {
 
 				for (size_t i = 0; i < dist; i++)
 					this->v_allocator.destroy(&this->v_ptr[indx_of_begin + i]);
-
 				while (input_num) {
 					this->push_back(input_value);
 					input_num--;
 				}
-
 				for (; tmp_it != tmp_vc.end(); tmp_it++)
 					this->push_back(*tmp_it);
 			}
