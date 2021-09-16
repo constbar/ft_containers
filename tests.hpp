@@ -2,6 +2,7 @@
 #define TESTS_HPP
 
 #include "vector.hpp"
+#include "stack.hpp"
 #include "ranit.hpp"
 #include "utils.hpp"
 
@@ -35,7 +36,6 @@ class test_vector {
 			diy::vector<int> diyvec1;
 			std::vector<int> stdvec1;
 
-			
 			std::cout << GRE;
 			std::cout << "size " << diyvec1.size() << std::endl;
 			std::cout << "capacity " << diyvec1.capacity() << std::endl;
@@ -507,7 +507,7 @@ class test_vector {
 
 class test_stack {
 	public:
-		void test() {
+		void test1() {
 			// all tests of constuctors and funcs
 
 			std::cout << "creating stack and fill it" << std::endl;
@@ -557,7 +557,39 @@ class test_stack {
 			std::cout << "top of stack: " << t4.top() << std::endl;
 			std::cout << END;
 		}
-};
 
+		void test2() {
+			
+			// test of stk with orig vector
+			std::cout << std::endl;
+			std::cout << "test of diy stack with std::vector inside" << std::endl;
+			diy::stack<int, std::vector<int> > ll;
+			ll.push(33);
+			ll.push(44);
+			ll.push(55);
+			ll.push(66);
+			std::cout << RED << ll.top() << END << std::endl;
+
+			// tests of operators
+			std::cout << std::endl;
+			std::cout << YEL;
+			std::cout << "test operators" << std::endl;
+			diy::stack<int> t1;
+			t1.push(777);
+			t1.push(888);
+			t1.push(999);
+
+			diy::stack<int, diy::vector<int> > t2 = t1;
+			std::cout << "== " << std::boolalpha << (t1 == t2) << std::endl;
+			std::cout << "!= " << std::boolalpha << (t1 != t2) << std::endl;
+			t2.pop();
+			std::cout << "!= " << std::boolalpha << (t1 != t2) << std::endl;
+			std::cout << "< " << std::boolalpha << (t1 < t2) << std::endl;
+			std::cout << "> " << std::boolalpha << (t1 > t2) << std::endl;
+			std::cout << ">= " << std::boolalpha << (t1 >= t2) << std::endl;
+			std::cout << "<= " << std::boolalpha << (t1 <= t2) << std::endl;
+			std::cout << END;
+		}
+};
 
 #endif

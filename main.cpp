@@ -35,8 +35,9 @@ int main() {
 	// test_vec.test_third();
 	// test_vec.test_operators();
 
-	// test_stack test_stk;
-	// test_stk.test();
+	test_stack test_stk;
+	test_stk.test1();
+	test_stk.test2();
 
 
 
