@@ -18,6 +18,7 @@
 #include "pair.hpp"
 #include "rbtree.hpp"
 #include "node.hpp"
+#include "map.hpp"
 
 // 1. check all valgrind at home
 // 2. iterators_traits, nado li ih ispol'zovat'? + !! save them to other file
@@ -39,10 +40,16 @@
 // 19. check all includes in all files, maybe something unnessesary
 // 20. send node to other hpp
 // final test for eval
+// 21. read check list and subj
 
 
 
 int main() {
+
+	diy::map<int, int> kek;
+	// kek.empty();
+	
+	// std::cout << kek.empty() << std::endl;
 
 	return 0;
 }

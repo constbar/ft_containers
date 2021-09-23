@@ -1,6 +1,6 @@
 NAME = a.out # rename it
 SRCS = main.cpp
-HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp
+HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp map.hpp
  
 OBJS = $(SRCS:.cpp=.o)
 CLANG = clang++
