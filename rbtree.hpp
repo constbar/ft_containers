@@ -7,6 +7,7 @@
 #include "utils.hpp"
 #include "pair.hpp"
 #include "node.hpp"
+#include "ranit.hpp"
 
 namespace diy {
 	template <typename T, typename P, typename Rs>
@@ -32,15 +33,15 @@ namespace diy {
 
 			typedef typename diy::bidit<T, pointer, reference>		iterator;
 			typedef typename diy::bidit<T, const T*, const T&>		const_iterator;
-			// typedef typename diy::rev_bidit<T, pointer, reference>	reverse_iterator;
-			// typedef typename diy::rev_bidit<T, const T*, const T&>	const_reverse_iterator;
+			typedef typename diy::rev_ranit<T, pointer, reference>	reverse_iterator;
+			typedef typename diy::rev_ranit<T, const T*, const T&>	const_reverse_iterator;
 
 		private:
 			ptr_nd			root;
 			ptr_nd			last;
 			size_t			size;
 			comparator		comp;
-			tree_allocator	talloc; // need i this?
+			tree_allocator	talloc;
 			node_allocator	nalloc;
 	
 		public:
@@ -83,7 +84,7 @@ namespace diy {
 				this->comp = other.comp;
 				this->talloc = other.talloc;
 				this->nalloc = other.nalloc;
-				insert(other.begin(), other.end()); // !!!!!	
+				insert(other.begin(), other.end());
 				return *this;
 			}
 
@@ -130,8 +131,6 @@ namespace diy {
 				}
 			}
 
-			iterator		end() { return iterator(this->last); }
-			const_iterator	end() const { return const_iterator(this->last); }
 
 			bool empty() const {
 				if (this->size == 0)
@@ -139,8 +138,20 @@ namespace diy {
 				return false;
 			}
 
+
 			size_t size_tree() const { return this->size; }
-			size_t max_size() const { return this->talloc.max_size(); } // check it!  
+			comparator value_comp() const { return this->comp; }
+			size_t max_size() const { return this->talloc.max_size(); } // check it!
+			tree_allocator get_allocator() const { return this->talloc; }
+
+			iterator		end() { return iterator(this->last); }
+			const_iterator	end() const { return const_iterator(this->last); }
+
+			reverse_iterator rbegin() { return reverse_iterator(end()); }
+			const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+			
+			reverse_iterator rend() { return reverse_iterator(begin()); }
+			const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
 			diy::pair<iterator, bool> insert(const T &input_value) { // why bool? // adding only 1 val without key?
 				if (this->root)
@@ -451,8 +462,6 @@ namespace diy {
 				const_iterator upper = upper_bound(input);
 				return diy::make_pair(const_iterator(lower), const_iterator(upper));
 			}
-
-			tree_allocator get_allocator() const { return this->talloc; }
 	};
 }
 

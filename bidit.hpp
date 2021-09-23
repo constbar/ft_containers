@@ -100,47 +100,5 @@ namespace diy {
 			bool operator<=(const it &other) const { return (this->ptr <= other.ptr); }
 	};
 }
-// 		public:
-// 			ranit(const iterator &other) { this->ptr = other.ptr; }
-
-// 			it &operator=(const it &other) {
-// 				if (this == &other)
-// 					return *this;
-// 				this->ptr = other.ptr;
-// 				return *this;
-// 			}
-			
-// 			~ranit() {}
-
-// 			reference operator*() const { return *this->ptr; }
-// 			pointer operator->() const { return this->ptr; }
-			
-// 			it &operator++() { ptr++; return *this; }
-// 			it &operator--() { ptr--; return *this; }
-
-// 			it operator++(int) {
-// 				it tmp_it(*this);
-// 				++(*this);
-// 				return tmp_it; }
-
-// 			it operator--(int) {
-// 				it tmp_it(*this);
-// 				--(*this);
-// 				return tmp_it; }
-
-// 			bool operator>(const it &other) const { return this->ptr > other.ptr; }
-// 			bool operator<(const it &other) const { return this->ptr < other.ptr; }
-// 			bool operator>=(const it &other) const { return this->ptr >= other.ptr; }
-// 			bool operator<=(const it &other) const { return this->ptr <= other.ptr; }
-// 			bool operator==(const it &other) const { return this->ptr == other.ptr; }
-// 			bool operator!=(const it &other) const { return this->ptr != other.ptr; }
-
-// 			it operator+(dif_type shift) const { return it(this->ptr + shift); }
-// 			it operator-(dif_type shift) const { return it(this->ptr - shift); }
-// 			it &operator+=(dif_type shift) { this->ptr += shift; return *this; }
-// 			it &operator-=(dif_type shift) { this->ptr -= shift; return *this; }
-// 			T& operator[](dif_type index) const { return this->ptr[index]; }
-// 			dif_type operator-(ranit other) const { return this->ptr - other.ptr; }
-// 	};
 
 #endif

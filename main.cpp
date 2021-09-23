@@ -44,27 +44,8 @@
 
 int main() {
 
-
-	diy::rbtree<int> tree;
-	tree.insert(222);
-	tree.insert(-122);
-	tree.insert(90);
-	
-	// tree.add(11);
-	// tree.add(222);
-	diy::rbtree<int>::iterator it;
-	it = tree.find(90);
-	// it = tree.find(90);
-	std::cout << *it << std::endl;
-	// ++it;
-	// std::cout << *it << std::endl;
-	// --it;
-	// std::cout << *it << std::endl;
 	return 0;
 }
-
-
-
 
 
 
