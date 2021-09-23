@@ -5,7 +5,7 @@
 #include "utils.hpp"
 
 #include <iostream>
-#include <iterator>
+#include <iterator> // need i?
 
 namespace diy {
 	template <typename T>
@@ -31,7 +31,7 @@ namespace diy {
 			allocator_type 	v_allocator;
 
 		public:
-			// invalid func
+			// invalid func // wtf??
  			explicit vector(const allocator_type &alloc = allocator_type()) :
 				v_ptr(NULL),
 				v_size(0),

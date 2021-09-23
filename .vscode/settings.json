@@ -66,6 +66,13 @@
 		"vector": "cpp",
 		"__tree": "cpp",
 		"map": "cpp",
-		"__memory": "cpp"
+		"__memory": "cpp",
+		"forward_list": "cpp",
+		"unordered_set": "cpp",
+		"regex": "cpp",
+		"valarray": "cpp",
+		"*.tcc": "cpp",
+		"fstream": "cpp",
+		"any": "cpp"
 	}
 }

@@ -6,6 +6,7 @@
 
 #include <iterator>
 
+// povtorenit random acsees iterator in diy and in inits??
 namespace diy {
 	template <typename T, typename Pointer = T*, typename Reference = T&,
 		typename Category = std::random_access_iterator_tag> 
@@ -15,7 +16,7 @@ namespace diy {
 			typedef Reference		reference;
 			typedef typename std::ptrdiff_t						dif_type;
 			typedef typename std::random_access_iterator_tag	category;
-			pointer ptr;
+			pointer									ptr;
 			typedef ranit<T, Pointer, Reference>	it;
 			typedef ranit<T, T*, T&>				iterator;
 			typedef ranit<T, const T*, const T&>	const_iterator;
@@ -24,14 +25,12 @@ namespace diy {
 			ranit() : ptr(NULL) {}
 			ranit(pointer input) : ptr(input) {}
 			ranit(const iterator &other) { this->ptr = other.ptr; }
-
 			it &operator=(const it &other) {
 				if (this == &other)
 					return *this;
 				this->ptr = other.ptr;
 				return *this;
 			}
-			
 			~ranit() {}
 
 			reference operator*() const { return *this->ptr; }

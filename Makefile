@@ -1,9 +1,10 @@
 NAME = a.out # rename it
 SRCS = main.cpp
-HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp tests.hpp pair.hpp bidit.hpp rbtree.hpp
+HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp
  
 OBJS = $(SRCS:.cpp=.o)
-CLANG = clang++ -std=c++98 -fsanitize=address
+CLANG = clang++
+# CLANG = clang++ -std=c++98 -fsanitize=address
 # CLANG = clang++ -std=c++98 #-Wall -Werror -Wextra -fsanitize=address
 
 all: $(NAME)
