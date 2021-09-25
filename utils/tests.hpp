@@ -1,10 +1,10 @@
 #ifndef TESTS_HPP
 #define TESTS_HPP
 
-#include "vector.hpp"
-#include "stack.hpp"
-#include "ranit.hpp"
+#include "../vector/vector.hpp"
+#include "../stack/stack.hpp"
 #include "utils.hpp"
+// #include "ranit.hpp"
 
 #include <iostream>
 #include <vector>

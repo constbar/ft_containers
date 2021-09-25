@@ -1,8 +1,9 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include "ranit.hpp"
-#include "utils.hpp"
+#include "../vector/ranit.hpp"
+#include "../utils/utils.hpp" // need i?
+#include "../iter.hpp" // to del
 
 #include <iostream>
 #include <iterator> // need i?
@@ -31,7 +32,6 @@ namespace diy {
 			allocator_type 	v_allocator;
 
 		public:
-			// invalid func // wtf??
  			explicit vector(const allocator_type &alloc = allocator_type()) :
 				v_ptr(NULL),
 				v_size(0),

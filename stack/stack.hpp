@@ -1,9 +1,8 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "vector.hpp"
-#include "ranit.hpp"
-#include "utils.hpp"
+#include "../vector/vector.hpp" // vidimo ne nado
+// #include "../vector/ranit.hpp" // dont need
 
 #include <iostream>
 #include <iterator>

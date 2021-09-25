@@ -41,7 +41,9 @@ namespace diy {
 					typedef typename diy::rev_ranit<T, pointer, reference>	reverse_iterator;
 					typedef typename diy::rev_ranit<T, const T*, const T&>	const_reverse_iterator;
 
-				private:
+					typedef typename diy::less<T> Compare; // del
+				// private:
+				public: // del
 					ptr_nd			root;
 					ptr_nd			last;
 					size_t			size;
@@ -50,7 +52,23 @@ namespace diy {
 					node_allocator	nalloc;
 			
 				public:
-					explicit rbtree(const comparator comp = comparator(), // &comp
+					explicit rbtree(const comparator &comp = comparator(), // &comp
+						const tree_allocator &talloc = tree_allocator(),
+						const node_allocator &nalloc = node_allocator()) :
+							root(NULL),
+							last(NULL),
+							size(0),
+							comp(comp),
+							talloc(talloc),
+							nalloc(nalloc) {
+						std::cout << "tree constructor simple" << std::endl;
+						this->last = this->nalloc.allocate(1);
+						this->nalloc.construct(this->last, nd(NULL));
+					}
+
+					template <class InputIterator>
+					rbtree(InputIterator first_iter, InputIterator last_iter,
+						const comparator comp = comparator(),
 						const tree_allocator &talloc = tree_allocator(),
 						const node_allocator &nalloc = node_allocator()) :
 							root(NULL),
@@ -61,23 +79,8 @@ namespace diy {
 							nalloc(nalloc) {
 						this->last = this->nalloc.allocate(1);
 						this->nalloc.construct(this->last, nd(NULL));
+						insert(first_iter, last_iter);
 					}
-
-					// template <class InputIterator>
-					// rbtree(InputIterator first_iter, InputIterator last_iter,
-					// 	const comparator comp = comparator(),
-					// 	const tree_allocator &talloc = tree_allocator(),
-					// 	const node_allocator &nalloc = node_allocator()) :
-					// 		root(NULL),
-					// 		last(NULL),
-					// 		size(0),
-					// 		comp(comp),
-					// 		talloc(talloc),
-					// 		nalloc(nalloc) {
-					// 	this->last = this->nalloc.allocate(1);
-					// 	this->nalloc.construct(this->last, nd(NULL));
-					// 	insert(first_iter, last_iter);
-					// }
 
 					rbtree &operator=(const rbtree &other) {
 						if (this == &other)

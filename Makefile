@@ -1,6 +1,10 @@
-NAME = a.out # rename it
+NAME = a.out # rename it // delete unnesses hpp s
 SRCS = main.cpp
-HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp map.hpp
+HEADER = node.hpp iter.hpp map.hpp
+
+# HEADER = vector.hpp ranit.hpp iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp map.hpp
+# HEADER = vector/vector.hpp vector/ranit.hpp stack/stack.hpp						utils/utils.hpp utils/pair.hpp utils/tests.hpp
+#  iter.hpp utils.hpp pair.hpp bidit.hpp rbtree.hpp node.hpp map.hpp
  
 OBJS = $(SRCS:.cpp=.o)
 CLANG = clang++
