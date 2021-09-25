@@ -209,25 +209,25 @@ struct ReverseForwardIterator : public ReverseInputIterator<T> {
 };
 
 template <typename T>
-class ReverseBidirectionalIterator : public ReverseForwardIterator<T> {
+class rev_bidit : public ReverseForwardIterator<T> {
 	public:
-		ReverseBidirectionalIterator() {}
-		ReverseBidirectionalIterator(ReverseBidirectionalIterator const &other) { *this = other; }
-		ReverseBidirectionalIterator &operator=( ReverseBidirectionalIterator const &other) {
+		rev_bidit() {}
+		rev_bidit(rev_bidit const &other) { *this = other; }
+		rev_bidit &operator=( rev_bidit const &other) {
 			if (this != &other)
 				this->it = other.it;
 			return *this;
 		}
-		virtual ~ReverseBidirectionalIterator() {}
-		ReverseBidirectionalIterator(diy::tree_node<T> *other) { this->it = other; }
+		virtual ~rev_bidit() {}
+		rev_bidit(diy::tree_node<T> *other) { this->it = other; }
 
-		ReverseBidirectionalIterator &operator--(){
+		rev_bidit &operator--(){
 			if (this->it && this->it->next)
 				this->it = this->it->next;
 			return (*this);
 		}
-		ReverseBidirectionalIterator operator--(int){
-			ReverseBidirectionalIterator I = *this;
+		rev_bidit operator--(int){
+			rev_bidit I = *this;
 			if (this->it && this->it->next)
 				this->it = this->it->next;
 			return (I);

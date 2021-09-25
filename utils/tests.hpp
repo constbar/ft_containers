@@ -4,10 +4,11 @@
 #include "../vector/vector.hpp"
 #include "../stack/stack.hpp"
 #include "utils.hpp"
-// #include "ranit.hpp"
+#include "pair.hpp"
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 #define RED "\033[31m"
 #define GRE "\033[32m"
@@ -590,6 +591,134 @@ class test_stack {
 			std::cout << "<= " << std::boolalpha << (t1 <= t2) << std::endl;
 			std::cout << END;
 		}
+};
+
+class test_map {
+	public:
+		void test_const() {
+
+			std::cout << std::endl;
+			std::cout << "test constructors" << std::endl;
+			std::cout << GRE;
+			diy::map<int, std::string> my1;
+			my1.insert(diy::make_pair(1, "str1"));
+			my1.insert(diy::make_pair(25, "str2"));
+			my1.insert(diy::make_pair(4, "str3"));
+			my1.insert(diy::make_pair(-30, "str4"));
+			my1.insert(diy::make_pair(100, "str5"));
+			diy::map<int, std::string>::iterator my_it1 = my1.begin();
+			std::cout << my_it1->first << std::endl;
+			my_it1++;
+			std::cout << my_it1->first << std::endl;
+			my_it1++;
+			std::cout << my_it1->first << std::endl;
+			my_it1++;
+			std::cout << my_it1->first << std::endl;
+
+			std::cout << BLU;
+			std::map<int, std::string> st1;
+			st1.insert(std::make_pair(1, "str1"));
+			st1.insert(std::make_pair(25, "str2"));
+			st1.insert(std::make_pair(4, "str3"));
+			st1.insert(std::make_pair(-30, "str4"));
+			st1.insert(std::make_pair(100, "str5"));
+			std::map<int, std::string>::iterator st_it1 = st1.begin();
+			std::cout << st_it1->first << std::endl;
+			st_it1++;
+			std::cout << st_it1->first << std::endl;
+			st_it1++;
+			std::cout << st_it1->first << std::endl;
+			st_it1++;
+			std::cout << st_it1->first << std::endl;
+
+			// reverse iter
+			diy::map<int, std::string>::reverse_iterator my_it2 = my1.rbegin();
+			std::map<int, std::string>::reverse_iterator st_it2 = st1.rbegin();
+			std::cout << GRE << my_it2->first << " ";
+			std::cout << GRE << my_it2->second << std::endl;
+			std::cout << BLU << st_it2->first << " ";
+			std::cout << BLU << st_it2->second << std::endl;
+			
+			std::cout << GRE << "size: " << my1.size() << std::endl;
+			std::cout << BLU << "size: " << st1.size() << std::endl;
+			std::cout << GRE << "[25]: " << my1[25] << std::endl;
+			std::cout << BLU << "[25]: " << st1[25] << std::endl;
+			my1[500] = "500";
+			st1[500] = "500";
+			std::cout << GRE << "[500]: " << my1[500] << std::endl;
+			std::cout << BLU << "[500]: " << st1[500] << std::endl;
+
+			std::cout << RED << "copy constructor" << END << std::endl;
+			diy::map<int, std::string> my2 = my1;
+			std::map<int, std::string> st2 = st1;
+			diy::map<int, std::string>::iterator mit = my2.begin();
+			std::map<int, std::string>::iterator sit = st2.begin();
+			std::cout << GRE << mit->first << std::endl;
+			std::cout << BLU << sit->first << std::endl;
+			mit++;
+			sit++;
+			diy::map<int, std::string> my3(mit, my2.end());
+			std::map<int, std::string> st3(sit, st2.end());
+			diy::map<int, std::string>::iterator mit4 = my3.begin();
+			std::map<int, std::string>::iterator sit4 = st3.begin();
+
+			std::cout << RED << "erase" << END << std::endl;
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			my3.erase(mit4);
+			st3.erase(sit4);
+			mit4 = my3.begin();
+			sit4 = st3.begin();
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			my3.erase(4);
+			st3.erase(4);
+			mit4 = my3.begin();
+			sit4 = st3.begin();
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			mit4 = my3.find(25);
+			sit4 = st3.find(25);
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			size_t num1 = my3.count(25);
+			size_t num2 = st3.count(25);
+			std::cout << GRE << "count " << num1 << std::endl;
+			std::cout << BLU << "count " << num2 << std::endl;
+
+			my3.insert(diy::make_pair(123, "123"));
+			my3.insert(diy::make_pair(123, "123"));
+			my3.insert(diy::make_pair(124, "124"));
+			my3.insert(diy::make_pair(125, "125"));
+			my3.insert(diy::make_pair(126, "126"));
+
+			st3.insert(std::make_pair(123, "123"));
+			st3.insert(std::make_pair(123, "123"));
+			st3.insert(std::make_pair(124, "124"));
+			st3.insert(std::make_pair(125, "125"));
+			st3.insert(std::make_pair(126, "126"));
+
+			std::cout << RED << "bounds" << END << std::endl;
+			mit4 = my3.upper_bound(123);
+			sit4 = st3.upper_bound(123);
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			mit4 = my3.lower_bound(123);
+			sit4 = st3.lower_bound(123);
+			std::cout << GRE << mit4->first << std::endl;
+			std::cout << BLU << sit4->first << std::endl;
+			
+			std::cout << GRE << "empty? " << std::boolalpha << my1.empty() << std::endl;
+			std::cout << BLU << "empty? " << std::boolalpha << st1.empty() << std::endl;
+			my1.clear();
+			st1.clear();
+			std::cout << GRE << "empty? " << std::boolalpha << my1.empty() << std::endl;
+			std::cout << BLU << "empty? " << std::boolalpha << st1.empty() << std::endl;
+
+			std::cout << END;
+		}
+
+
 };
 
 #endif

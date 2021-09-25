@@ -56,10 +56,14 @@
 // 25. make typename in iter.hpp
 // 26. make it
 // 27. make_pair.hpp class -> template
+// 28. test equal range ~720 tests/
+// 29. rotate funcs in map -> peremeshat'
+// 30. node -> shoul be class
 
 #include "map.hpp"
 #include "utils/pair.hpp"
 #include "utils/utils.hpp"
+#include "utils/tests.hpp"
 // #include "vector/vector.hpp"
 
 // namespace diy {
@@ -69,57 +73,11 @@
 // 	pair<T1, T2> make_pair(const T1 &x, const T2 &y);
 // }
 
-int main() {  // 146
+int main() {
 
-	diy::pair<int, int> kek;
-	kek = diy::make_pair(1,1);
+	test_map test_m;
+	test_m.test_const();
 
-	ft::map<int, int> kke;
-	kke.insert(kek);
-
-	kke.insert(diy::make_pair(1, 2111));
-	kke.insert(diy::make_pair(1,2111));
-	kke.insert(diy::make_pair(2,3333));
-	kke.insert(diy::make_pair(4,2123));
-	kke.insert(diy::make_pair(111,211));
-
-	ft::map<int, int>::iterator itkke = kke.begin();
-	std::cout << "f " << itkke->first << std::endl;
-	std::cout << "s " << itkke->second << std::endl;
-	itkke++;
-	std::cout << "f " << itkke->first << std::endl;
-	std::cout << "s " << itkke->second << std::endl;
-	itkke++;
-	std::cout << "f " << itkke->first << std::endl;
-	std::cout << "s " << itkke->second << std::endl;
-	std::cout << std::endl;
-	// std::cout << itkke->first << std::endl;
-	// std::cout << itkke->second << std::endl;
-	// std::cout << "clear " << kke.empty() << std::endl;
-	// kke.clear();
-	// std::cout << "clear " << kke.empty() << std::endl;
-	// std::cout << "max " << kke.max_size() << std::endl;
-	
-	// ft::map<int, std::string>::reverse_Iterator i = kke.rbegin();
-	// std::cout << i->second << std::endl;
-	// i++;
-	// std::cout << i->second << std::endl;	
-
-	// diy::vector<int> asd;
-	// asd.push_back(1);
-	// asd.push_back(3);
-	// asd.push_back(123);
-	// asd.push_back(312132);
-	// asd.push_back(1232121);
-	// diy::vector<int>::iterator it = asd.begin();
-	// std::cout << std::endl;
-	// std::cout << *it << std::endl;
-	// it++;
-	// std::cout << *it << std::endl;
-
-	// diy::vector<int>::const_iterator cit;
-	// cit = asd.begin();
-	// // = asd.begin();
 
 
 }
