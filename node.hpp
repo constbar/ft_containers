@@ -2,33 +2,53 @@
 #define NODE_HPP
 
 namespace diy {
-	template <class T>
-	struct tree_node {
-		tree_node *prev;
-		tree_node *next;
-		tree_node *right;
-		tree_node *left;
-		T *ptr;
+	template <typename T>
+	class tree_node {
+		public:
+			tree_node	*prev;
+			tree_node	*next;
+			tree_node	*right;
+			tree_node	*left;
+			T			*value;
 	};
+		// template <typename T>
+		// class node {
+		// 	public:
+		// 		char	color;
+		// 		T		*value;
+		// 		node	*left;
+		// 		node	*right;
+		// 		node	*parent;
 
-// 	template <typename T>
-// 	struct maillon {
-// 		T		*value;
-// 		bool	color; // char // 
-// 		maillon	*left;
-// 		maillon	*right;
-// 		maillon	*parent;
-// 		maillon	*next;
-// 		T *ptr; // wtf?
-// 		maillon	*prev; // wtf?
+		// 	private:
+		// 		node() :
+		// 			color('r'),
+		// 			value(NULL),
+		// 			left(NULL),
+		// 			right(NULL),
+		// 			parent(NULL) {}
 
-// 		maillon(T *input_value) :
-// 			value(input_value),
-// 			color(true),
-// 			left(NULL),
-// 			right(NULL),
-// 			parent(NULL),
-// 			next(NULL) {} // ??
-// 	};
+		// 	public:
+		// 		explicit node(T *input_value) :
+		// 			color('r'),
+		// 			value(input_value),
+		// 			left(NULL),
+		// 			right(NULL),
+		// 			parent(NULL) {}
+
+		// 		node(const node &other) { *this = other; }
+
+		// 		node &operator=(const node &other) {
+		// 			if (this == &other)
+		// 				return *this;
+		// 			this->color = other.color;
+		// 			this->value = other.value;
+		// 			this->left = other.left;
+		// 			this->right = other.right;
+		// 			this->parent = other.parent;
+		// 			return *this;
+		// 		}
+
+		// 		~node() {}
 }
 #endif

@@ -632,6 +632,7 @@ class test_map {
 			std::cout << st_it1->first << std::endl;
 
 			// reverse iter
+			std::cout << RED << "rev iter" << END << std::endl;
 			diy::map<int, std::string>::reverse_iterator my_it2 = my1.rbegin();
 			std::map<int, std::string>::reverse_iterator st_it2 = st1.rbegin();
 			std::cout << GRE << my_it2->first << " ";

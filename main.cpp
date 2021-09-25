@@ -59,6 +59,8 @@
 // 28. test equal range ~720 tests/
 // 29. rotate funcs in map -> peremeshat'
 // 30. node -> shoul be class
+// 31. diy::pair<iterator, bool> insert(const value_type &input_value) {
+
 
 #include "map.hpp"
 #include "utils/pair.hpp"
