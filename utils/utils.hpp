@@ -114,7 +114,7 @@ namespace diy {
 
 namespace diy {
 	template <typename T1, typename T2>
-	class pair {
+	struct pair {
 		public:
 			typedef T1 first_type;
 			typedef T2 second_type;
@@ -137,11 +137,13 @@ namespace diy {
 
 			pair &operator=(const pair &pr) {
 				if (*this == pr)
-					return (*this);
+					return *this;
 				this->first = pr.first;
 				this->second = pr.second;
 				return *this;
 			}
+
+			~pair() {}
 	};
 
 	template <typename T1, typename T2>

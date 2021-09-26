@@ -335,7 +335,7 @@ namespace diy {
 							copy_node->prev = new_node;
 							this->last_pos->next = new_node;
 						}
-						put_node(copy_node, new_node);
+						put_node(new_node);
 						pos = new_node;
 					}
 					return pos;
@@ -407,7 +407,7 @@ namespace diy {
 				}
 			
 			private:
-				void put_node(node *copy_nod, node *new_node) {
+				void put_node(node *new_node) {
 					node *cpyTree = this->begin_pos;
 					while (cpyTree->right != new_node && cpyTree->left != new_node) {
 						if ((*cpyTree->value).first < (*new_node->value).first) {
