@@ -21,18 +21,16 @@ namespace diy {
 			}
 			~bidit() {}
 
-			node* get_ptr_iter() const { return this->ptr; }
-			
 			bool operator==(const bidit &other) const {
 				if (other.ptr == this->ptr)
 					return true;
 				return false;
 			}
 
-			bool operator!=(const bidit &other) const { return !operator==(other); }
 			T &operator*() { return *this->ptr->value; }
 			T *operator->() { return this->ptr->value; }
 			const T *operator->() const { return this->ptr->value; }
+			bool operator!=(const bidit &other) const { return !operator==(other); }
 
 			bidit operator++() {
 				if (this->ptr && this->ptr->next)
@@ -86,11 +84,10 @@ namespace diy {
 				return false;
 			}
 
-			node *get_ptr_iter() const { return this->ptr; }
 			T &operator*() { return (*this->ptr->value); }
 			T *operator->() { return (this->ptr->value); }
 			const T *operator->() const { return (this->ptr->value); }
-			bool operator!=(const rev_bidit &other) const { return (!operator==(other)); }
+			bool operator!=(const rev_bidit &other) const { return !operator==(other); }
 
 			rev_bidit operator++() {
 				if (this->ptr && this->ptr->prev)

@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <string.h>
+#include <string.h> // del
 #include "node.hpp"
 #include "iter.hpp"
 #include "utils/utils.hpp"
@@ -18,26 +18,28 @@ namespace diy {
 
 namespace diy {
 	template <typename Key, typename T,
-		typename Compare = diy::less<Key>,
-		typename Alloc = std::allocator<diy::pair<const Key, T> > >
+		typename compare = diy::less<Key> >//, // rename it
+		// typename alloc_pair = std::allocator<diy::pair<const Key, T> > > // can alloc made lower
 		class map {
 			public:
-				typedef T							mapped_type;
-				typedef diy::pair<const Key, T>		value_type;
-				typedef diy::tree_node<value_type>	node;
-				typedef Compare						key_compare;
-				typedef Alloc						alloc_type;
-				typedef diy::bidit<value_type> 		iterator;
-				typedef const iterator				const_iterator;
-				typedef size_t						size_type;
-				typedef diy::rev_bidit<value_type>	reverse_iterator;
-				typedef diy::rev_bidit<const T>		const_reverse_iterator;
+				typedef T									mapped_type;
+				typedef diy::pair<const Key, T>				value_type;
+				typedef diy::tree_node<value_type>			node;
+				typedef typename std::allocator<value_type>	alloc_pair;
+				typedef compare								key_compare;
+				typedef alloc_pair							pair_alloc;
+				typedef diy::bidit<value_type> 				iterator;
+				typedef const iterator						const_iterator;
+				typedef size_t								size_type;
+				typedef diy::rev_bidit<value_type>			reverse_iterator;
+				typedef diy::rev_bidit<const T>				const_reverse_iterator;
+				typedef typename std::allocator<diy::tree_node<value_type> > node_alloc;
 
 			class value_compare {	
 				friend class map;
 				protected:
-					Compare comp;
-					value_compare(Compare c) : comp(c) {}
+					compare comp;
+					value_compare(compare c) : comp(c) {}
 
 				public:
 					typedef bool result_type;
@@ -53,27 +55,32 @@ namespace diy {
 				node		*begin_pos;
 				node		*last_pos;
 				size_t		size_tree;
-				alloc_type	talloc;
+				pair_alloc	palloc;
+				node_alloc	nalloc;
 				key_compare	comparator;
 
 			public:
 				explicit map(const key_compare &comp = key_compare(),
-					const alloc_type &alloc = alloc_type()) :
+					const pair_alloc &p_alloc = pair_alloc(),
+					const node_alloc &n_alloc = node_alloc()) :
 						begin_pos(NULL),
 						last_pos(NULL),
 						size_tree(0),
-						talloc(alloc),
+						palloc(p_alloc),
+						nalloc(n_alloc),
 						comparator(comp) {}
 
 				template <typename InpIt>
 				map(InpIt first_iter, InpIt last_iter,
 					const key_compare &comp = key_compare(),
-					const alloc_type &alloc = alloc_type()) :
-						talloc(alloc),
-						comparator(comp),
+					const pair_alloc &p_alloc = pair_alloc(),
+					const node_alloc &n_alloc = node_alloc()) :
 						begin_pos(NULL),
 						last_pos(NULL),
-						size_tree(0) {
+						size_tree(0), 
+						palloc(p_alloc),
+						nalloc(n_alloc),
+						comparator(comp) {
 							insert(first_iter, last_iter);
 				}
 
@@ -93,6 +100,8 @@ namespace diy {
 						this->last_pos = NULL;
 						this->size_tree = 0;
 					}
+					this->palloc = other.palloc;
+					this->nalloc = other.nalloc;
 					return *this;
 				}
 
@@ -152,29 +161,32 @@ namespace diy {
 				}
 
 				bool empty() const { return this->size_tree <= 1; }
-				size_t max_size() const { return this->talloc.max_size(); }
+				size_t max_size() const { return this->palloc.max_size(); }
 				reverse_iterator rend() { return this->last_pos; }
 				const_reverse_iterator rend() const { return this->last_pos; }
-				mapped_type &operator[](const Key &k) { 
-					return ((*((this->insert(diy::make_pair(k, mapped_type()))).first)).second);
+				mapped_type &operator[](const Key &input_key) { 
+					return ((*((this->insert(diy::make_pair(input_key, mapped_type()))).first)).second);
 				}
 				size_t count(const Key &input_key) const { return (this->find(input_key) != this->end()); }
 
-								void clear() {
-					iterator cpy; // tmp cpy
+				void clear() {
+					iterator cpy_it;
 					iterator it = this->begin();
 					while (it != this->end()) {
-						if (it.get_ptr_iter()->value) {
-							this->talloc.deallocate(it.get_ptr_iter()->value, 1);
-							it.get_ptr_iter()->value = NULL;
+						if (it.ptr->value) {
+							this->palloc.destroy(it.ptr->value);
+							this->palloc.deallocate(it.ptr->value, 1);
+							it.ptr->value = NULL;
 						}
-						cpy = it;
+						cpy_it = it;
 						it++;
-						delete cpy.get_ptr_iter(); // delete
+						this->nalloc.destroy(cpy_it.ptr);
+						this->nalloc.deallocate(cpy_it.ptr, 1);
 					}
-					this->begin_pos = NULL;
 					this->size_tree = 0;
-					delete this->last_pos; // DELETE ??
+					this->begin_pos = NULL;
+					this->nalloc.destroy(this->last_pos);
+					this->nalloc.deallocate(this->last_pos, 1);
 					this->last_pos = NULL;
 				}
 
@@ -204,87 +216,76 @@ namespace diy {
 					return diy::make_pair(fin_iter, true);
 				}
 
-				void erase(iterator position) {
-					node *replaced = position.get_ptr_iter();
-
-					//arbre
-					if (!replaced->right && !replaced->left)
-					{
-						for (iterator ite = this->begin(); ite != this->end(); ite++)
-						{
-							if (ite.get_ptr_iter()->left == replaced)
-								ite.get_ptr_iter()->left = NULL;
-							else if (ite.get_ptr_iter()->right == replaced)
-								ite.get_ptr_iter()->right = NULL;
+				void erase(iterator pos) {
+					node *tmp_node = pos.ptr;
+					iterator iter = this->begin();
+					if (!tmp_node->right && !tmp_node->left) {
+						iter = this->begin();
+						for (; iter != this->end(); iter++) {
+							if (iter.ptr->left == tmp_node)
+								iter.ptr->left = NULL;
+							else if (iter.ptr->right == tmp_node)
+								iter.ptr->right = NULL;
 						}
-						if (replaced == this->begin_pos)
+						if (tmp_node == this->begin_pos)
 							this->begin_pos = this->begin_pos->next;
 					}
-					else if (replaced->right && replaced->left)
-					{
-						node *tmp = replaced->next;
-						if (tmp != this->end().get_ptr_iter())
-						{
-							if (tmp->right)
-							{
-								for (iterator ite = this->begin(); ite != this->end(); ite++)
-								{
-									if (ite.get_ptr_iter()->left == tmp)
-										ite.get_ptr_iter()->left = tmp->right;
-									else if (ite.get_ptr_iter()->right == tmp)
-										ite.get_ptr_iter()->right = tmp->right;
+					else if (tmp_node->right && tmp_node->left) {
+						node *if_node = tmp_node->next;
+						if (if_node != this->end().ptr) {
+							if (if_node->right) {
+								iter = this->begin();
+								for (; iter != this->end(); iter++) {
+									if (iter.ptr->left == if_node)
+										iter.ptr->left = if_node->right;
+									else if (iter.ptr->right == if_node)
+										iter.ptr->right = if_node->right;
 								}
 							}
-							tmp->right = replaced->right;
-							tmp->left = replaced->left;
-							for (iterator ite = this->begin(); ite != this->end(); ite++)
-							{
-								if (ite.get_ptr_iter()->left == replaced)
-									ite.get_ptr_iter()->left = tmp;
-								else if (ite.get_ptr_iter()->right == replaced)
-									ite.get_ptr_iter()->right = tmp;
+							if_node->right = tmp_node->right;
+							if_node->left = tmp_node->left;
+							iter = this->begin();
+							for (; iter != this->end(); iter++) {
+								if (iter.ptr->left == tmp_node)
+									iter.ptr->left = if_node;
+								else if (iter.ptr->right == tmp_node)
+									iter.ptr->right = if_node;
 							}
 						}
-						if (replaced == this->begin_pos)
-							this->begin_pos = tmp;
+						if (tmp_node == this->begin_pos)
+							this->begin_pos = if_node;
 					}
-					else
-					{
-						node *value;
-						if (replaced->right)
-							value = replaced->right;
-						if (replaced->left)
-							value = replaced->left;
-						for (iterator ite = this->begin(); ite != this->end(); ite++)
-						{
-							if (ite.get_ptr_iter()->left == replaced)
-								ite.get_ptr_iter()->left = value;
-							else if (ite.get_ptr_iter()->right == replaced)
-								ite.get_ptr_iter()->right = value;
+					else {
+						node *else_node;
+						if (tmp_node->right)
+							else_node = tmp_node->right;
+						if (tmp_node->left)
+							else_node = tmp_node->left;
+						iter = this->begin();
+						for (; iter != this->end(); iter++) {
+							if (iter.ptr->left == tmp_node)
+								iter.ptr->left = else_node;
+							else if (iter.ptr->right == tmp_node)
+								iter.ptr->right = else_node;
 						}
-						if (replaced == this->begin_pos)
-							this->begin_pos = value;
+						if (tmp_node == this->begin_pos)
+							this->begin_pos = else_node;
 					}
-
-					//Iterator
-					replaced->prev->next = replaced->next;
-					replaced->next->prev = replaced->prev;
-
-					//Delete
-					this->talloc.deallocate(replaced->value, 1);
-					replaced->value = NULL;
-					delete replaced;
-					replaced = NULL;
-					this->size_tree -= 1;
-
+					tmp_node->prev->next = tmp_node->next;
+					tmp_node->next->prev = tmp_node->prev;
+					this->palloc.destroy(tmp_node->value);
+					this->palloc.deallocate(tmp_node->value, 1);
+					this->nalloc.destroy(tmp_node);
+					this->nalloc.deallocate(tmp_node, 1);
+					this->size_tree--;
 					if (!this->size_tree)
 						this->clear();
 				}
 
-				size_type erase(const Key &k) { // !!!!
+				size_type erase(const Key &input_key) {
 					size_t ret_size = this->size_tree;
 					iterator it;
-					if ((it = this->find(k)) != this->end())
+					if ((it = this->find(input_key)) != this->end())
 						this->erase(it);
 					return ret_size - this->size_tree;
 				}
@@ -299,21 +300,14 @@ namespace diy {
 				}
 
 				iterator insert(iterator pos, const value_type &val) {
-					if (this->size_tree == 0) {
-						//Creation begin
-						this->begin_pos = new node; // make node here // MAKE ALLLOC
-						memset(this->begin_pos, 0, sizeof(node)); // DEL MEMSET
-
-						this->begin_pos->value = this->talloc.allocate(1);
-						this->talloc.construct(this->begin_pos->value, val);
-
-						//Creation endsize
-						this->last_pos = new node;
-						memset(this->last_pos, 0, sizeof(node));
-						this->last_pos->value = reinterpret_cast<value_type*>(&this->size_tree); // reinpr?
-
-						//pointeurs
-						this->begin_pos->prev = this->last_pos; // make other func here
+					if (!this->size_tree) {
+						this->begin_pos = this->nalloc.allocate(1);
+						this->nalloc.construct(this->begin_pos, node());
+						this->begin_pos->value = this->palloc.allocate(1);
+						this->palloc.construct(this->begin_pos->value, val);
+						this->last_pos = this->nalloc.allocate(1);
+						this->nalloc.construct(this->last_pos, node());
+						this->begin_pos->prev = this->last_pos;
 						this->begin_pos->next = this->last_pos;
 						this->last_pos->prev = this->begin_pos;
 						this->last_pos->next = this->begin_pos;
@@ -321,49 +315,29 @@ namespace diy {
 						pos = this->begin_pos;
 					}
 					else {
-						node *_new = new node; // NEW NODE???
-						memset(_new, 0, sizeof(node));
-						_new->value = this->talloc.allocate(1);
-						this->talloc.construct(_new->value, val);
-						this->size_tree += 1;
-
-						//Iterateurs
-						node *cpy = this->begin().get_ptr_iter();
-						if ((*cpy->value).first > (*_new->value).first) {
-							_new->prev = this->last_pos;
-							_new->next = cpy;
-							cpy->prev = _new;
-							this->last_pos->next = _new;
+						node *new_node = this->nalloc.allocate(1);
+						this->nalloc.construct(new_node, node());
+						new_node->value = this->palloc.allocate(1);
+						this->palloc.construct(new_node->value, val);
+						this->size_tree++;
+						node *copy_node = this->begin().ptr;
+						if ((*copy_node->value).first < (*new_node->value).first) {
+							while (copy_node != this->last_pos &&
+							(*copy_node->value).first < (*new_node->value).first)
+								copy_node = copy_node->next;
+							new_node->prev = copy_node->prev;
+							new_node->next = copy_node;
+							copy_node->prev->next = new_node;
+							copy_node->prev = new_node;
 						}
 						else {
-							while (cpy != this->last_pos && (*cpy->value).first < (*_new->value).first)
-								cpy = cpy->next;
-							_new->prev = cpy->prev;
-							_new->next = cpy;
-							cpy->prev->next = _new;
-							cpy->prev = _new;
+							new_node->prev = this->last_pos;
+							new_node->next = copy_node;
+							copy_node->prev = new_node;
+							this->last_pos->next = new_node;
 						}
-
-						//arbres
-						node *cpyTree = this->begin_pos;
-						while (cpyTree->right != _new && cpyTree->left != _new)
-						{
-							if ((*cpyTree->value).first < (*_new->value).first)
-							{
-								if (cpyTree->right == NULL)
-									cpyTree->right = _new;
-								else
-									cpyTree = cpyTree->right;
-							}
-							else if ((*cpyTree->value).first > (*_new->value).first)
-							{
-								if (cpyTree->left == NULL)
-									cpyTree->left = _new;
-								else
-									cpyTree = cpyTree->left;
-							}
-						}
-						pos = _new;
+						put_node(copy_node, new_node);
+						pos = new_node;
 					}
 					return pos;
 				}
@@ -380,7 +354,8 @@ namespace diy {
 					diy::swap(this->begin_pos, other.begin_pos);
 					diy::swap(this->last_pos, other.last_pos);
 					diy::swap(this->size_tree, other.size_tree);
-					diy::swap(this->talloc, other.talloc);
+					diy::swap(this->palloc, other.palloc);
+					diy::swap(this->nalloc, other.nalloc);
 					diy::swap(this->comparator, other.comparator);
 				}
 							
@@ -430,7 +405,26 @@ namespace diy {
 						next++;
 					return make_pair<iterator, iterator>(it, next);
 				}
-
+			
+			private:
+				void put_node(node *copy_nod, node *new_node) {
+					node *cpyTree = this->begin_pos;
+					while (cpyTree->right != new_node && cpyTree->left != new_node)
+					{
+						if ((*cpyTree->value).first < (*new_node->value).first) {
+							if (cpyTree->right == NULL)
+								cpyTree->right = new_node;
+							else
+								cpyTree = cpyTree->right;
+						}
+						else if ((*cpyTree->value).first > (*new_node->value).first) {
+							if (cpyTree->left == NULL)
+								cpyTree->left = new_node;
+							else
+								cpyTree = cpyTree->left;
+						}
+					}
+				}
 	};
 
 }

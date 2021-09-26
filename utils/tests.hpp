@@ -4,7 +4,6 @@
 #include "../vector/vector.hpp"
 #include "../stack/stack.hpp"
 #include "utils.hpp"
-#include "pair.hpp"
 
 #include <iostream>
 #include <vector>
@@ -715,6 +714,25 @@ class test_map {
 			st1.clear();
 			std::cout << GRE << "empty? " << std::boolalpha << my1.empty() << std::endl;
 			std::cout << BLU << "empty? " << std::boolalpha << st1.empty() << std::endl;
+
+			std::cout << std::endl;
+			std::cout << "test str pair" << std::endl;
+			diy::map<std::string, std::string> str_map;
+			// str_map.insert(diy::make_pair<std::string, std::string>);
+			str_map.insert(diy::make_pair("str1", "str1"));
+			str_map.insert(diy::make_pair("str2", "str2"));
+			str_map.insert(diy::make_pair("str3", "str3"));
+			str_map.insert(diy::make_pair("str4", "str4"));
+			diy::map<std::string, std::string>::iterator str_it = str_map.begin();
+			std::cout << str_it->first << std::endl;
+			str_it++;
+			std::cout << str_it->first << std::endl;
+			str_it++;
+			std::cout << str_it->first << std::endl;
+			str_it++;
+			std::cout << str_it->first << std::endl;
+			std::cout << "tree size " << str_map.size() << std::endl;
+
 
 			std::cout << END;
 		}
