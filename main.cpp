@@ -4,14 +4,9 @@
 #include <stack>
 #include <map>
 
-#include <numeric> // chech it
-#include <typeinfo> // typeid
-
-// -7. bool vector 
-// -6. make test from subject
-// -5. change standart in make and wall wextra werror and name ./a.out
-// -3. how map tree works?
-// -1. test equal range ~720 tests/
+// // -5. change standart in make and wall wextra werror and name ./a.out
+// // -3. how map tree works?
+// // -1. test equal range ~720 tests/
 
 #include "map/map.hpp"
 #include "utils/utils.hpp"
@@ -35,9 +30,5 @@ int main() {
 
 	test_map test_m;
 	test_m.test_const();
-
 	
 }
-
-
-

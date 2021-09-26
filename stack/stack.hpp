@@ -8,8 +8,9 @@
 namespace diy {
 	template <typename T, typename container = diy::vector<T> >
 	class stack {
-		private:
-			container c;
+		public:
+			typedef container	container_type;
+			container_type		c;
 
 		public:
 			explicit stack(const container &input = container()) { this->c = input; }
