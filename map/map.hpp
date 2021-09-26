@@ -2,11 +2,10 @@
 #define MAP_HPP
 
 #include <iostream>
-#include <cmath>
-#include <string.h> // del
+
 #include "node.hpp"
-#include "iter.hpp"
-#include "utils/utils.hpp"
+#include "bidit.hpp"
+#include "../utils/utils.hpp"
 
 namespace diy {
 	template <typename T1, typename T2>
@@ -18,13 +17,12 @@ namespace diy {
 
 namespace diy {
 	template <typename Key, typename T,
-		typename compare = diy::less<Key> >//, // rename it
-		// typename alloc_pair = std::allocator<diy::pair<const Key, T> > > // can alloc made lower
+		typename compare = diy::less<Key> >
 		class map {
 			public:
 				typedef T									mapped_type;
 				typedef diy::pair<const Key, T>				value_type;
-				typedef diy::tree_node<value_type>			node;
+				typedef diy::map_node<value_type>			node;
 				typedef typename std::allocator<value_type>	alloc_pair;
 				typedef compare								key_compare;
 				typedef alloc_pair							pair_alloc;
@@ -33,7 +31,7 @@ namespace diy {
 				typedef size_t								size_type;
 				typedef diy::rev_bidit<value_type>			reverse_iterator;
 				typedef diy::rev_bidit<const T>				const_reverse_iterator;
-				typedef typename std::allocator<diy::tree_node<value_type> > node_alloc;
+				typedef typename std::allocator<diy::map_node<value_type> > node_alloc;
 
 			class value_compare {	
 				friend class map;
@@ -74,7 +72,8 @@ namespace diy {
 				map(InpIt first_iter, InpIt last_iter,
 					const key_compare &comp = key_compare(),
 					const pair_alloc &p_alloc = pair_alloc(),
-					const node_alloc &n_alloc = node_alloc()) :
+					const node_alloc &n_alloc = node_alloc(),
+					typename diy::enable_if<!std::is_integral<InpIt>::value, InpIt>::type = 0) :
 						begin_pos(NULL),
 						last_pos(NULL),
 						size_tree(0), 
@@ -211,7 +210,7 @@ namespace diy {
 					iterator fin_iter;
 					if (this->begin_pos != NULL && this->begin_pos->value != NULL &&
 					(fin_iter = this->find(input_value.first)) != this->end())
-						return (diy::make_pair(fin_iter, false));
+						return diy::make_pair(fin_iter, false);
 					fin_iter = insert(this->begin_pos, input_value);
 					return diy::make_pair(fin_iter, true);
 				}
@@ -343,11 +342,12 @@ namespace diy {
 				}
 
 				template <typename InpIt>
-				void insert(InpIt first, InpIt last) {
-					while (first != last) {
-						insert(*first);
-						first++;
-					}
+				void insert(InpIt first, InpIt last, 
+					typename diy::enable_if<!std::is_integral<InpIt>::value, InpIt>::type = 0) {
+						while (first != last) {
+							insert(*first);
+							first++;
+						}
 				}
 
 				void swap(map &other) {
@@ -409,8 +409,7 @@ namespace diy {
 			private:
 				void put_node(node *copy_nod, node *new_node) {
 					node *cpyTree = this->begin_pos;
-					while (cpyTree->right != new_node && cpyTree->left != new_node)
-					{
+					while (cpyTree->right != new_node && cpyTree->left != new_node) {
 						if ((*cpyTree->value).first < (*new_node->value).first) {
 							if (cpyTree->right == NULL)
 								cpyTree->right = new_node;

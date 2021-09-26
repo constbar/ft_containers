@@ -1,13 +1,11 @@
-#ifndef ITER_HPP
-#define ITER_HPP
-
-#include <iostream>
+#ifndef BIDIT_HPP
+#define BIDIT_HPP
 
 namespace diy {
 	template <typename T>
 	class bidit {
 		public:
-			typedef diy::tree_node<T>	node;
+			typedef diy::map_node<T>	node;
 			node						*ptr;
 
 		public:
@@ -64,7 +62,7 @@ namespace diy {
 	template <typename T>
 	class rev_bidit {
 		public:
-			typedef diy::tree_node<T>	node;
+			typedef diy::map_node<T>	node;
 			node 						*ptr;
 
 		public:
@@ -84,9 +82,9 @@ namespace diy {
 				return false;
 			}
 
-			T &operator*() { return (*this->ptr->value); }
-			T *operator->() { return (this->ptr->value); }
-			const T *operator->() const { return (this->ptr->value); }
+			T &operator*() { return *this->ptr->value; }
+			T *operator->() { return this->ptr->value; }
+			const T *operator->() const { return this->ptr->value; }
 			bool operator!=(const rev_bidit &other) const { return !operator==(other); }
 
 			rev_bidit operator++() {

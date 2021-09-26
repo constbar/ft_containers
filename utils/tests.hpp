@@ -3,6 +3,7 @@
 
 #include "../vector/vector.hpp"
 #include "../stack/stack.hpp"
+#include "../map/map.hpp"
 #include "utils.hpp"
 
 #include <iostream>

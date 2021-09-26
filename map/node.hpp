@@ -1,29 +1,26 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-// #include "rbtree.hpp"
-// #include "bidit.hpp"
-
 namespace diy {
 	template <typename T>
-	struct tree_node {
+	class map_node {
 		public:
-			tree_node	*prev;
-			tree_node	*next;
-			tree_node	*left;
-			tree_node	*right;
+			map_node	*prev;
+			map_node	*next;
+			map_node	*left;
+			map_node	*right;
 			T			*value;
 		
-		tree_node() :
+		map_node() :
 			prev(NULL),
 			next(NULL),
 			left(NULL),
 			right(NULL),
 			value(NULL) {}
 
-			tree_node(const tree_node &other) { *this = other; }
+			map_node(const map_node &other) { *this = other; }
 
-			tree_node &operator=(const tree_node &other) {
+			map_node &operator=(const map_node &other) {
 				if (this == &other)
 					return *this;
 				this->prev = other.prev;
@@ -34,7 +31,7 @@ namespace diy {
 				return *this;
 			}
 
-			~tree_node() {}
+			~map_node() {}
 	};
 }
 

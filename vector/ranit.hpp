@@ -1,12 +1,6 @@
 #ifndef RAITR_HPP
 #define RAITR_HPP
 
-// #include "iter.hpp" // need i?
-// #include "utils.hpp"
-
-#include <iterator>
-
-// povtorenit random acsees iterator in diy and in inits??
 namespace diy {
 	template <typename T, typename Pointer = T*, typename Reference = T&,
 		typename Category = std::random_access_iterator_tag> 

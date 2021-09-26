@@ -1,20 +1,18 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "../vector/vector.hpp" // vidimo ne nado
-// #include "../vector/ranit.hpp" // dont need
-
 #include <iostream>
-#include <iterator>
+
+#include "../vector/vector.hpp"
 
 namespace diy {
-	template <typename T, typename Container = diy::vector<T> >
+	template <typename T, typename container = diy::vector<T> >
 	class stack {
 		private:
-			Container c;
+			container c;
 
 		public:
-			explicit stack(const Container &input = Container()) { this->c = input; }
+			explicit stack(const container &input = container()) { this->c = input; }
 			stack(const stack &other) { this->c = other.c; }
 			stack &operator=(const stack &other) {
 				if (this == &other)
@@ -31,7 +29,7 @@ namespace diy {
 			void		pop() { c.pop_back(); }
 			size_t		size() const { return c.size(); }
 			bool		empty() const { return c.empty(); }
-			Container	get_c() const { return c; }
+			container	get_c() const { return c; }
 	};
 
 	template <typename T>

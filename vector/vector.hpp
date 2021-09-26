@@ -1,12 +1,10 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include "../vector/ranit.hpp"
-#include "../utils/utils.hpp" // need i?
-#include "../iter.hpp" // to del
-
 #include <iostream>
-#include <iterator> // need i?
+
+#include "../vector/ranit.hpp"
+#include "../utils/utils.hpp"
 
 namespace diy {
 	template <typename T>
@@ -205,13 +203,13 @@ namespace diy {
 				size_t dist = diy::iter_dist(first, last);
 				size_t i = start_id;
 
-				for (; last != this->end(); first++, last++, i++) { // del here
+				for (; last != this->end(); first++, last++, i++) {
 					this->v_allocator.destroy(&this->v_ptr[i]);
 					this->v_allocator.construct(&this->v_ptr[i], *last);
 				}
 				size_t last_id =  i + start_id;
 
-				for (; last_id < this->size(); last_id++) { // del here
+				for (; last_id < this->size(); last_id++) {
 					std::cout << "val and id " << last_id << " " << v_ptr[last_id] << " adr pure destroy " << &this->v_ptr[last_id] << std::endl;
 					this->v_allocator.destroy(&this->v_ptr[last_id]);
 				}
