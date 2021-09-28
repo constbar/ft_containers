@@ -189,7 +189,6 @@ namespace diy {
 						tree_step = val_place->left;
 				}
 
-				this->size++;
 				if (*val_place->value == input_value) {
 					destoy_node(new_node);
 					this->root->parent = this->last;
@@ -198,6 +197,7 @@ namespace diy {
 					ret_d = diy::make_pair(iterator(val_place), false);
 					return ret_d;
 				}
+				this->size++;
 				attach_node(val_place, input_value, new_node);
 				check_violations(new_node);
 
@@ -254,7 +254,6 @@ namespace diy {
 
 			iterator find(T input_value) {
 				ptr_nd tmp_ptr_nd = find_in_tree(input_value);
-
 				if (!this->comp(*tmp_ptr_nd->value, input_value) &&
 				!this->comp(input_value, *tmp_ptr_nd->value))
 					return iterator(tmp_ptr_nd);
@@ -263,7 +262,6 @@ namespace diy {
 
 			const_iterator find(T input_value) const {
 				ptr_nd tmp_ptr_nd = find_in_tree(input_value);
-
 				if (!this->comp(*tmp_ptr_nd->value, input_value) &&
 				!this->comp(input_value, *tmp_ptr_nd->value))
 					return const_iterator(tmp_ptr_nd);

@@ -156,7 +156,7 @@ namespace diy {
 				size_t size() const {
 					if (!this->size_tree)
 						return 0;
-					return this->size_tree - 1;
+					return this->size_tree;
 				}
 
 				bool empty() const { return this->size_tree <= 1; }
@@ -310,7 +310,7 @@ namespace diy {
 						this->begin_pos->next = this->last_pos;
 						this->last_pos->prev = this->begin_pos;
 						this->last_pos->next = this->begin_pos;
-						this->size_tree = 2;
+						this->size_tree = 1;
 						pos = this->begin_pos;
 					}
 					else {

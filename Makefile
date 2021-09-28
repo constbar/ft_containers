@@ -4,7 +4,7 @@ HEADER = set/set.hpp set/setit.hpp set/snode.hpp
 # HEADER = map/node.hpp map/bidit.hpp map/map.hpp stack/stack.hpp utils/tests.hpp utils/utils.hpp vector/ranit.hpp vector/vector.hpp
  
 OBJS = $(SRCS:.cpp=.o)
-CLANG = clang++ #-fsanitize=address #-Wall -Werror -Wextra
+CLANG = clang++ -g #-fsanitize=address #-Wall -Werror -Wextra
 # CLANG = clang++ -std=c++98 -fsanitize=address
 # CLANG = clang++ -std=c++98 #-Wall -Werror -Wextra -fsanitize=address
 
