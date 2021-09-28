@@ -408,19 +408,19 @@ namespace diy {
 			
 			private:
 				void put_node(node *new_node) {
-					node *cpyTree = this->begin_pos;
-					while (cpyTree->right != new_node && cpyTree->left != new_node) {
-						if ((*cpyTree->value).first < (*new_node->value).first) {
-							if (cpyTree->right == NULL)
-								cpyTree->right = new_node;
+					node *copy_node = this->begin_pos;
+					while (copy_node->right != new_node && copy_node->left != new_node) {
+						if ((*copy_node->value).first < (*new_node->value).first) {
+							if (copy_node->right == NULL)
+								copy_node->right = new_node;
 							else
-								cpyTree = cpyTree->right;
+								copy_node = copy_node->right;
 						}
-						else if ((*cpyTree->value).first > (*new_node->value).first) {
-							if (cpyTree->left == NULL)
-								cpyTree->left = new_node;
+						else if ((*copy_node->value).first > (*new_node->value).first) {
+							if (copy_node->left == NULL)
+								copy_node->left = new_node;
 							else
-								cpyTree = cpyTree->left;
+								copy_node = copy_node->left;
 						}
 					}
 				}
