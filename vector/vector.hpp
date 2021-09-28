@@ -7,7 +7,6 @@
 namespace diy {
 	template <typename T>
 	class vector {
-
 		public:
 			typedef T*				pointer;
 			typedef T&				reference;
