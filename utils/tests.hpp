@@ -4,11 +4,14 @@
 #include "../vector/vector.hpp"
 #include "../stack/stack.hpp"
 #include "../map/map.hpp"
+#include "../set/set.hpp"
 #include "utils.hpp"
 
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <map>
+#include <set>
 
 #define RED "\033[31m"
 #define GRE "\033[32m"
@@ -734,11 +737,112 @@ class test_map {
 			std::cout << str_it->first << std::endl;
 			std::cout << "tree size " << str_map.size() << std::endl;
 
-
 			std::cout << END;
 		}
+};
 
+class test_set {
+	public:
+		void test() {
+			// test constructors
 
+			diy::set<int> s1;
+			s1.insert(0);
+			s1.insert(1);
+			s1.insert(2);
+			s1.insert(3);
+			s1.insert(4);
+			s1.insert(5);
+			s1.insert(6);
+			diy::set<int> copy1(s1);
+			diy::set<int> copy2 = copy1;
+			std::cout << GRE << "simple iter" << std::endl;
+			diy::set<int>::iterator it1 = copy2.begin();
+			std::cout << *it1 << std::endl;
+			it1++;
+			std::cout << *it1 << std::endl;
+			it1++;
+			std::cout << *it1 << std::endl;
+			it1++;
+			std::cout << *it1 << std::endl;
+			it1++;
+			std::cout << *it1 << std::endl;
+
+			std::cout << "const reverse" << std::endl;
+			diy::set<int>::const_reverse_iterator it2;
+			it2 = copy2.rev_begin();
+			std::cout << *it2 << std::endl;
+			++it2;
+			std::cout << *it2 << std::endl;
+			it2--;
+			std::cout << *it2 << std::endl;
+			it2++;
+			std::cout << *it2 << std::endl;
+			it2++;
+			std::cout << *it2 << std::endl;
+
+			std::cout << "reverse rend" << std::endl;
+			diy::set<int>::reverse_iterator it3;
+			it3 = copy2.rend();
+			std::cout << *it3 << std::endl;
+			it3--;
+			std::cout << *it3 << std::endl;
+			it3--;
+			std::cout << *it3 << std::endl;
+			std::cout << "cosnt reverse rend" << std::endl;
+			diy::set<int>::const_reverse_iterator it4;
+			it4 = copy2.rev_end();
+			std::cout << *it4 << std::endl;
+			it4--;
+			std::cout << *it4 << std::endl;
+			std::cout << END << std::endl;
+
+			diy::set<int> s2;
+			s2.insert(20);
+			s2.insert(40);
+			s2.insert(60);
+			s2.insert(80);
+			s2.insert(100);
+			s2.insert(120);
+			diy::set<int>::iterator it_s2 = s2.begin();
+			s2.erase(it_s2);
+			it_s2 = s2.begin();
+			std::cout << *it_s2 << std::endl;
+			diy::set<int>::iterator it_s3 = s2.begin();
+			it_s3++;
+			it_s3++;
+			// erase by iters
+			s2.erase(it_s2, it_s3);
+			diy::set<int>::iterator it_s4 = s2.begin();
+			std::cout << *it_s4 << std::endl;
+			// find
+			it_s4 = s2.find(100);
+			std::cout << *it_s4 << std::endl;
+			it_s4 = s2.lower_bound(60);
+			std::cout << *it_s4 << std::endl;
+			it_s4 = s2.upper_bound(100);
+			std::cout << *it_s4 << std::endl;
+
+			std::cout << "size: " << s2.size_set() << std::endl;
+			std::cout << "max size: " << s2.max_size() << std::endl;
+			std::cout << "set is empty? " << std::boolalpha << s2.empty() << std::endl;
+			s2.clear();
+			std::cout << "set is empty? " << std::boolalpha << s2.empty() << std::endl;
+
+			std::cout << YEL;
+			diy::set<std::string> str_set;
+			str_set.insert("123");
+			str_set.insert("1123");
+			str_set.insert("12344");
+			diy::set<std::string>::iterator str_it;
+			str_it = str_set.begin();
+			std::cout << *str_it << std::endl;
+			str_it++;
+			std::cout << *str_it << std::endl;
+			str_it++;
+			std::cout << *str_it << std::endl;
+			std::cout << END;
+		}
 };
 
 #endif
