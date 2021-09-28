@@ -1,8 +1,6 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <iostream>
-
 #include "../vector/ranit.hpp"
 #include "../utils/utils.hpp"
 
@@ -210,7 +208,7 @@ namespace diy {
 				size_t last_id =  i + start_id;
 
 				for (; last_id < this->size(); last_id++) {
-					std::cout << "val and id " << last_id << " " << v_ptr[last_id] << " adr pure destroy " << &this->v_ptr[last_id] << std::endl;
+					// std::cout << "val and id " << last_id << " " << v_ptr[last_id] << " adr pure destroy " << &this->v_ptr[last_id] << std::endl;
 					this->v_allocator.destroy(&this->v_ptr[last_id]);
 				}
 				this->v_size = this->v_size - dist;
