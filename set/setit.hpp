@@ -42,7 +42,8 @@ namespace diy {
 					this->ptr = this->ptr->right;
 					while (this->ptr->left)
 						this->ptr = this->ptr->left;
-				} else {
+				}
+				else {
 					tmp = this->ptr->parent;
 					for (; tmp && this->ptr == tmp->right; tmp = tmp->parent)
 						this->ptr = tmp;
@@ -63,7 +64,8 @@ namespace diy {
 					this->ptr = this->ptr->left;
 					while (this->ptr->right)
 						this->ptr = this->ptr->right;
-				} else {
+				}
+				else {
 					tmp = this->ptr->parent;
 					for (;tmp && this->ptr == tmp->left; tmp = tmp->parent)
 						this->ptr = tmp;
@@ -86,8 +88,6 @@ namespace diy {
 			bool operator<=(const it &other) const { return (this->ptr <= other.ptr); }
 	};
 }
-
-
 
 namespace diy {
 	template <typename T, typename Pointer = T*, typename Reference = T&>
@@ -135,7 +135,8 @@ namespace diy {
 					this->ptr = this->ptr->left;
 					while (this->ptr->right)
 						this->ptr = this->ptr->right;
-				} else {
+				}
+				else {
 					tmp = this->ptr->parent;
 					for (;tmp && this->ptr == tmp->left; tmp = tmp->parent)
 						this->ptr = tmp;
@@ -156,7 +157,8 @@ namespace diy {
 					this->ptr = this->ptr->right;
 					while (this->ptr->left)
 						this->ptr = this->ptr->left;
-				} else {
+				}
+				else {
 					tmp = this->ptr->parent;
 					for (; tmp && this->ptr == tmp->right; tmp = tmp->parent)
 						this->ptr = tmp;
