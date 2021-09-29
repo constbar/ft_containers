@@ -28,7 +28,7 @@ namespace diy {
 			typedef typename diy::setit<T, const T*, const T&>		const_iterator;
 			typedef typename diy::rev_setit<T, pointer, reference>	reverse_iterator;
 			typedef typename diy::rev_setit<T, const T*, const T&>	const_reverse_iterator;
-
+		
 		private:
 			ptr_nd			root;
 			ptr_nd			last;
@@ -302,15 +302,15 @@ namespace diy {
 			}
 
 			diy::pair<iterator, iterator> equal_range(const T &input) {
-				iterator lower = lower_bound(input);
-				iterator upper = upper_bound(input);
-				return diy::make_pair(iterator(lower), iterator(upper));
+				if (this->lower_bound(input) == this->end() && this->upper_bound(input) == this->end())
+					return diy::make_pair<iterator, iterator>(this->begin(), this->begin());
+				return diy::make_pair<iterator, iterator>(this->lower_bound(input), this->upper_bound(input));
 			}
 
 			diy::pair<const_iterator, const_iterator> equal_range(const T &input) const {
-				const_iterator lower = lower_bound(input);
-				const_iterator upper = upper_bound(input);
-				return diy::make_pair(const_iterator(lower), const_iterator(upper));
+				if (this->lower_bound(input) == this->end() && this->upper_bound(input) == this->end())
+					return diy::make_pair<const_iterator, const_iterator>(this->begin(), this->begin());
+				return diy::make_pair<const_iterator, const_iterator>(this->lower_bound(input), this->upper_bound(input));
 			}
 
 			size_t count(const T &input_value) const {
