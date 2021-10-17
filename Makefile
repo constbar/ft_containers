@@ -3,7 +3,7 @@ SRCS = main.cpp
 HEADER = set/set.hpp set/setit.hpp set/snode.hpp map/node.hpp map/bidit.hpp map/map.hpp stack/stack.hpp utils/tests.hpp utils/utils.hpp vector/ranit.hpp vector/vector.hpp
  
 OBJS = $(SRCS:.cpp=.o)
-CLANG = clang++ -g -std=c++98 -Wall -Werror -Wextra -fsanitize=address
+CLANG = clang++ -g -Wall -Werror -Wextra -fsanitize=address #-std=c++98
 
 all: $(NAME)
 

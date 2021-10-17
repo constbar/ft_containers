@@ -14,23 +14,10 @@
 
 int main() {
 
-	// test_vector test_vec;
-	// test_vec.test_const();
-	// test_vec.test_copy();
-	// test_vec.test_iters();
-	// test_vec.test_first();
-	// test_vec.test_second();
-	// test_vec.test_third();
-	// test_vec.test_operators();
-
-	// test_stack test_stk;
-	// test_stk.test1();
-	// test_stk.test2();
-
-	// test_map test_m;
-	// test_m.test_const();
-
-	// test_set test_s;
-	// test_s.test();
-	
+	std::cout << "diy::vector test" << std::endl;
+	diy::vector<std::string> vec1;
+	vec1.push_back("vec1");
+	vec1.push_back("vec2");
+	vec1.push_back("vec3");
+	diy::vector<std::string>::iterator vec1_it = vec1.begin();
 }
