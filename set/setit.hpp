@@ -33,8 +33,8 @@ namespace diy {
 
 			pointer set_node() { return this->ptr; }
 			ptr_nd base() const { return this->ptr; }
-			reference operator*() const { return *ptr->value; } // add this
-			pointer operator->() const { return ptr->value; } // add this
+			reference operator*() const { return *ptr->value; }
+			pointer operator->() const { return ptr->value; }
 
 			it &operator++() {
 				ptr_nd tmp;
@@ -119,8 +119,8 @@ namespace diy {
 
 			pointer set_node() { return this->ptr; }
 			ptr_nd base() const { return this->ptr; }
-			reference operator*() const { return *ptr->value; } // add this
-			pointer operator->() const { return ptr->value; } // add this
+			reference operator*() const { return *ptr->value; }
+			pointer operator->() const { return ptr->value; }
 
 
 			it operator++(int) {
