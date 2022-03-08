@@ -1,6 +1,6 @@
 ## ft_containers
 
-project of 42 school where it is necessary to reimplement some stl containers with all their methods in C++ using 98 standard.
+project of École 42 where it is necessary to reimplement some stl containers with all their methods in C++ using 98 standard.
 
 these containers work just like the original ones. for the speed of memory allocation in containers, std::allocator is used.
 
